@@ -1,7 +1,13 @@
 <?php
 session_start();
 
-$usuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : null;
+// Si no hay usuario logueado, volvemos a start
+if (!isset($_SESSION['usuario'])) {
+    header("Location: index.php?controller=start");
+    exit;
+}
 
-// Cargamos la vista home
+$usuario = $_SESSION['usuario'];
+
+// Mostramos el home del usuario
 require "views/home_view.phtml";

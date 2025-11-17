@@ -4,13 +4,17 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Cargar la conexión (la usará el modelo)
+// Cargar conexión BD
 require_once "db/db.php";
 
-// Router muy simple
-$controller = isset($_GET['controller']) ? $_GET['controller'] : 'home';
+// Router básico
+$controller = isset($_GET['controller']) ? $_GET['controller'] : 'start';
 
 switch ($controller) {
+    case 'start':
+        require_once "controllers/start_controller.php";
+        break;
+
     case 'home':
         require_once "controllers/home_controller.php";
         break;
@@ -20,6 +24,6 @@ switch ($controller) {
         break;
 
     default:
-        echo "Controlador no encontrado";
+        require_once "controllers/start_controller.php";
         break;
 }

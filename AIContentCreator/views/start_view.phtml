@@ -1,20 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Bienvenido</title>
+    <title>Bienvenido - AI Content Creator</title>
+    <link rel="stylesheet" href="./styles/start.css">
+    <link rel="stylesheet" href="./styles/styles.css">
 </head>
+
 <body>
-    <h1>Bienvenido a WebNoticias IA</h1>
 
-    <p>Elige una opción para continuar:</p>
+    <header>
+        AI CONTENT CREATOR
+    </header>
 
-    <a href="index.php?action=login">
-        <button>Iniciar Sesión</button>
-    </a>
+    <main>
+        <div class="login-card">
 
-    <a href="index.php?action=register">
-        <button>Registrarse</button>
-    </a>
+            <div class="logo">
+                <img src="./img/logo.jpg" alt="Logo" />
+            </div>
+
+            <h2>Bienvenido</h2>
+
+            <p style="margin-bottom: 18px; font-size:14px; color:#444;">
+                Crea contenido inteligente, automatiza procesos y gestiona tus artículos con la potencia de <br> AI
+                CONTENT CREATOR.
+            </p>
+
+            <div class="button-group">
+                <a href="index.php?controller=auth&action=login">Iniciar sesión</a>
+                <a href="index.php?controller=auth&action=register">Crear cuenta</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        © 2025 AI Content Creator - Todos los derechos reservados
+    </footer>
+
 </body>
+
 </html>

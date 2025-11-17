@@ -1,23 +1,80 @@
-<h1>Registro</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - AI Content Creator</title>
+    <link rel="stylesheet" href="./styles/styles.css"> 
+</head>
 
-<?php if (!empty($errores)): ?>
-    <ul style="color:red;">
-        <?php foreach ($errores as $e): ?>
-            <li><?= $e ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+<body>
 
-<form method="post">
-    <input type="text" name="dni" placeholder="DNI" required><br><br>
-    <input type="text" name="nombre" placeholder="Nombre" required><br><br>
-    <input type="text" name="apellidos" placeholder="Apellidos" required><br><br>
-    <input type="number" name="numero_empresa" placeholder="Número empresa" required><br><br>
-    <input type="email" name="email" placeholder="Email" required><br><br>
-    <input type="password" name="password" placeholder="Contraseña" required><br><br>
-    <input type="password" name="confirm_password" placeholder="Repetir contraseña" required><br><br>
+<header>
+    AI CONTENT CREATOR
+</header>
 
-    <button type="submit">Registrarme</button>
-</form>
+<main>
+    <div class="login-card">
 
-<a href="index.php?controller=auth&action=login">Ya tengo cuenta</a>
+        <div class="logo">
+            <img src="./img/logo.jpg" alt="Logo" />
+        </div>
+
+        <h2>Crear Cuenta</h2>
+
+        <?php if (!empty($errores)): ?>
+            <ul style="color:red; text-align:left; margin-bottom:15px;">
+                <?php foreach ($errores as $e): ?>
+                    <li><?= htmlspecialchars($e) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+        <form method="post">
+
+            <label>DNI</label>
+            <input type="text" name="dni" required
+                   value="<?= htmlspecialchars($dni ?? '') ?>">
+
+            <label>Nombre</label>
+            <input type="text" name="nombre" required
+                   value="<?= htmlspecialchars($nombre ?? '') ?>">
+
+            <label>Apellidos</label>
+            <input type="text" name="apellidos" required
+                   value="<?= htmlspecialchars($apellidos ?? '') ?>">
+
+            <label>Número de empresa</label>
+            <input type="number" name="numero_empresa" required
+                   value="<?= htmlspecialchars($numero_empresa ?? '') ?>">
+
+            <label>Email</label>
+            <input type="email" name="email" required
+                   value="<?= htmlspecialchars($email ?? '') ?>">
+
+            <label>Contraseña</label>
+            <input type="password" name="password" required>
+
+            <label>Repite la contraseña</label>
+            <input type="password" name="confirm_password" required>
+
+            <button type="submit">Crear cuenta</button>
+
+        </form>
+
+        <a class="reset-link" href="index.php?controller=auth&action=login">
+            ¿Ya tienes una cuenta? Inicia sesión
+        </a>
+
+        <a class="reset-link" href="index.php?controller=home">
+            Volver a Home
+        </a>
+
+    </div>
+</main>
+
+<footer>
+    © 2025 AI Content Creator - Todos los derechos reservados
+</footer>
+
+</body>
+</html>

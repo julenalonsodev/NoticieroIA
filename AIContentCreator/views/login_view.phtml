@@ -1,13 +1,57 @@
-<h1>Iniciar sesión</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="./styles/styles.css">
+</head>
 
-<?php if (!empty($error)): ?>
-    <p style="color:red;"><?= $error ?></p>
-<?php endif; ?>
+<body>
 
-<form method="post">
-    <input type="email" name="email" placeholder="Email" required><br><br>
-    <input type="password" name="password" placeholder="Contraseña" required><br><br>
-    <button type="submit">Entrar</button>
-</form>
+<header>
+    AI CONTENT CREATOR
+</header>
 
-<a href="index.php?controller=auth&action=register">Crear cuenta</a>
+<main>
+    <div class="login-card">
+
+        <div class="logo">
+            <img src="./img/logo.jpg" alt="Logo" />
+        </div>
+
+        <h2>Iniciar sesión</h2>
+
+        <?php if (!empty($error)): ?>
+            <p style="color:red; margin-bottom: 15px;"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
+
+        <form method="post">
+
+            <label>Email</label>
+            <input type="email" name="email" required
+                   value="<?= htmlspecialchars($email_form ?? '') ?>">
+
+            <label>Contraseña</label>
+            <input type="password" name="password" required>
+
+            <button type="submit">Entrar</button>
+
+        </form>
+
+        <a class="reset-link" href="index.php?controller=auth&action=register">
+            ¿No tienes cuenta? Crear una
+        </a>
+
+        <a class="reset-link" href="index.php?controller=home">
+            Volver a Home
+        </a>
+
+    </div>
+</main>
+
+<footer>
+    © 2025 AI Content Creator - Todos los derechos reservados
+</footer>
+
+</body>
+</html>

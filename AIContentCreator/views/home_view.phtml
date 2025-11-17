@@ -1,13 +1,105 @@
-<h1>Home</h1>
+<!DOCTYPE html>
+<html lang="es">
 
-<?php if ($usuario): ?>
-    <p>Bienvenido <?= $usuario['nombre'] ?> <?= $usuario['apellidos'] ?></p>
-    <p>DNI: <?= $usuario['dni'] ?></p>
-    <p>Empresa: <?= $usuario['numero_empresa'] ?></p>
-    <p>Email: <?= $usuario['email'] ?></p>
-    <a href="index.php?controller=auth&action=logout">Cerrar sesión</a>
-<?php else: ?>
-    <p>No has iniciado sesión</p>
-    <a href="index.php?controller=auth&action=login">Iniciar sesión</a> |
-    <a href="index.php?controller=auth&action=register">Crear cuenta</a>
-<?php endif; ?>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Home - AI Content Creator</title>
+
+    <!-- CSS DEL HOME -->
+    <link rel="stylesheet" href="./styles/home.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>AI CONTENT CREATOR</header>
+
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="layout">
+
+        <!-- ================================
+             ASIDE CON INFORMACIÓN DEL USUARIO
+        =================================== -->
+        <aside>
+
+            <!-- BLOQUE SUPERIOR -->
+            <div>
+                <!-- AVATAR (inicial del nombre) -->
+                <div class="user-avatar">
+                    <?= strtoupper(substr($usuario['nombre'], 0, 1)) ?>
+                </div>
+
+                <!-- NOMBRE COMPLETO -->
+                <div class="user-block-name">
+                    <?= htmlspecialchars($usuario['nombre']) ?>
+                    <?= htmlspecialchars($usuario['apellidos']) ?>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="user-block-email">
+                    <?= htmlspecialchars($usuario['email']) ?>
+                </div>
+
+                <!-- DATOS EXTRA -->
+                <div style="margin-top: 14px; font-size:13px; color:var(--muted); text-align:center;">
+                    <p>DNI: <?= htmlspecialchars($usuario['dni']) ?></p>
+                    <p>Empresa Nº: <?= htmlspecialchars($usuario['numero_empresa']) ?></p>
+                </div>
+
+                <!-- MENÚ DEL ASIDE -->
+                <nav class="aside-menu" style="margin-top:25px;">
+                    <ul>
+                        <li><a class="active" href="#"><span>🏠</span> Inicio</a></li>
+                        <li><a href="#"><span>📝</span> Mis artículos</a></li>
+                        <li><a href="#"><span>🎛️</span> Preferencias</a></li>
+                        <li><a href="#"><span>⚙️</span> Ajustes</a></li>
+                        <li><a href="#"><span>❓</span> Ayuda</a></li>
+                        <li><a href="index.php?controller=auth&action=logout"><span>⏻</span> Cerrar sesión</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- PIE DEL ASIDE -->
+            <div class="aside-footer">
+                AI Content Creator v1.0
+            </div>
+        </aside>
+
+        <!-- ================================
+             MAIN CONTENT (CONTENIDO PRINCIPAL)
+        =================================== -->
+        <main>
+            <h1 class="page-title">Panel de usuario</h1>
+            <p class="page-sub">Bienvenido a tu área personal</p>
+
+            <section class="list">
+
+                <!-- <article class="card">
+                    <h3>Tu Perfil</h3>
+                    <p>Nombre: <?= htmlspecialchars($usuario['nombre']) ?> <?= htmlspecialchars($usuario['apellidos']) ?></p>
+                    <p>Email: <?= htmlspecialchars($usuario['email']) ?></p>
+                    <p>DNI: <?= htmlspecialchars($usuario['dni']) ?></p>
+                    <p>Empresa Nº: <?= htmlspecialchars($usuario['numero_empresa']) ?></p>
+                </article> -->
+
+                <article class="card">
+                    <h3>Próximas funciones</h3>
+                    <p>📌 Generación de artículos con IA</p>
+                    <p>📌 Panel avanzado</p>
+                    <p>📌 Guardado automático</p>
+                </article>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <footer>
+        © 2025 AI Content Creator - Todos los derechos reservados
+    </footer>
+
+</body>
+
+</html>
