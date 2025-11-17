@@ -1,0 +1,13 @@
+<h1>Home</h1>
+
+<?php if ($usuario): ?>
+    <p>Bienvenido <?= $usuario['nombre'] ?> <?= $usuario['apellidos'] ?></p>
+    <p>DNI: <?= $usuario['dni'] ?></p>
+    <p>Empresa: <?= $usuario['numero_empresa'] ?></p>
+    <p>Email: <?= $usuario['email'] ?></p>
+    <a href="index.php?controller=auth&action=logout">Cerrar sesión</a>
+<?php else: ?>
+    <p>No has iniciado sesión</p>
+    <a href="index.php?controller=auth&action=login">Iniciar sesión</a> |
+    <a href="index.php?controller=auth&action=register">Crear cuenta</a>
+<?php endif; ?>
