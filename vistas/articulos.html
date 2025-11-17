@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Artículos – Dominion Demo</title>
+    <link rel="stylesheet" href="/css/articulos.css" />
+</head>
+
+<body>
+    <header>DOMINION DIGITAL</header>
+
+    <main>
+        <div class="wrap">
+            <!-- ======= Vista tabla ======= -->
+            <section id="view-table" class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin:0; color:var(--brand)">Artículos</h2>
+                    <!-- 🔹 Botón volver al Home -->
+                    <button class="btn primary" onclick="goHome()">🏠 Volver al Home</button>
+                </div>
+                <div class="card-body">
+                    <table class="table" id="articlesTable" aria-describedby="Listado de artículos">
+                        <thead>
+                            <tr>
+                                <th style="width:36%">Título</th>
+                                <th>Descripción</th>
+                                <th style="width:120px">Imagen</th>
+                                <th style="width:110px">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody><!-- contenido dinámico --></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ======= Vista post LinkedIn ======= -->
+            <section id="view-post">
+                <div class="backbar">
+                    <button class="btn" onclick="goBack()">⬅ Volver al listado</button>
+                </div>
+
+                <article class="li-post" id="postContainer"><!-- dinámico --></article>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        Copyright © Dominion Global<br>
+        Artificial Intelligence Department
+    </footer>
+
+    <script>
+        // ====== Datos de ejemplo (5 artículos) ======
+        const ARTICLES = [
+            {
+                id: 'amazon-robotizacion',
+                titulo: "🤖  La Revolución Robotizada en Amazon: ¿El Futuro del Trabajo?  🤖",
+                descripcion: "Amazon planea una transformación radical en su plantilla, anticipando la eliminación de más de 600,000 empleos en Estados Unidos durante los próximos años. Esta reducción masiva no surge de un anuncio oficial sino de una filtración interna de su departamento de robótica.\n\nLa estrategia: optimizar operaciones reemplazando al personal con robots, incluidos humanoides cada vez más avanzados. Se estima que solo en dos años se perderán 160,000 puestos, mientras que hasta 2033 el recorte será paulatino.\n\nEste cambio promete reducir costes y precios, pero plantea un debate crucial sobre el impacto en el mercado laboral. Como señala Elon Musk, los robots podrían reemplazar todos los trabajos, haciendo del empleo algo opcional.\n\n¿Cómo afrontar esta transición donde la automatización redefine nuestra forma de trabajar? ¿Estamos preparados para el nuevo paradigma laboral? 🚀🤔",
+                imagen: "https://i.ibb.co/7tKWK97z/23468936de1d.jpg"
+            },
+            {
+                id: 'no-code-google',
+                titulo: "🛠️  Google y la Era del Bip Coding: Programar Sin Programar  🛠️",
+                descripcion: "Una de las novedades más llamativas de esta semana es la apuesta de Google por el Bip Coding, o programación sin necesidad de saber programar. Integrado en su plataforma AI Studio, esta funcionalidad permite crear aplicaciones y sitios web con ayuda de Inteligencia Artificial, de forma sencilla y accesible.\n\nCon un chat que funciona con Gemini 2.5 Pro, los usuarios pueden construir y desplegar proyectos solo pidiendo a la IA las funcionalidades que necesitan. Este desarrollo supone una democratización del desarrollo software que expertos como Satya Nadella, CEO de Microsoft, ven como el inicio de la era del software personalizado.\n\n¿Será esta la oportunidad para que personas sin conocimientos técnicos creen soluciones a medida? ¿Cómo impactará esto en la creación y gestión de productos digitales? 💡👨‍💻",
+                imagen: "https://i.ibb.co/qL09kqBm/f91ef0357fd4.jpg"
+            },
+            {
+                id: 'lentes-inteligentes',
+                titulo: "🧭  Automatización y Productividad: El Futuro de los Equipos con IA  🧭",
+                descripcion: "Amazon no solo avanza en la robotización, sino que también lanza innovadoras gafas inteligentes para sus repartidores. Estas gafas incorporan GPS y reconocimiento fotográfico, guiando en tiempo real a los conductores y validando entregas.\n\nEste tipo de tecnología pone en evidencia cómo la automatización no solo sustituye tareas, sino que también multiplica la productividad humana. Según Stuart Russell, esta combinación de robots y aumento de capacidades humanas llevará a las empresas a realizar muchas más actividades que antes.\n\n¿Cómo pueden los equipos adaptarse para aprovechar esta sinergia entre humanos y máquinas? ¿Será la colaboración la clave para un entorno laboral más eficiente? 📦🚚🤝",
+                imagen: "https://i.ibb.co/LXYfBnJy/e185d5dd6546.jpg"
+            },
+            {
+                id: 'debate-regulacion-agi',
+                titulo: "🌐  OpenAI Expande Colaboración: Compartir Proyectos en ChatGPT  🌐",
+                descripcion: "OpenAI continúa evolucionando ChatGPT con funciones colaborativas. Esta semana estrenó la posibilidad de compartir proyectos, que son instrucciones específicas para que la IA actúe según un contexto definido.\n\nAhora, usuarios pueden invitar a compañeros para colaborar en un mismo proyecto, con permisos para editar o solo interactuar, fomentando el trabajo en equipo y la co-creación. Aunque todavía no se comparten chats, esta función anticipa un futuro de colaboración en tiempo real con la IA.\n\n¿Cómo cambiará esto la dinámica de trabajo en equipos? ¿Estamos ante una nueva era de productividad impulsada por IA? 🧑‍🤝‍🧑💻🤖",
+                imagen: "https://i.ibb.co/XxS2Bqps/c63d5017c3ae.jpg"
+            },
+            {
+                id: 'progreso-agi',
+                titulo: "🚀  NVIDIA Lleva los Data Centers a la Órbita: La Computación Espacial  🚀",
+                descripcion: "La innovación tecnológica sigue superando barreras y NVIDIA tiene un plan futurista: lanzar servidores a la órbita terrestre. ¿El objetivo? Reducir en hasta 10 veces los costes de mantenimiento de los centros de datos y evitar problemas energéticos asociados a estas infraestructuras en tierra.\n\nEste noviembre despegará el primer satélite con una GPU H100 para probar la viabilidad de este ambicioso proyecto. La realidad supera la ficción: mientras robots reemplazan empleos y la IA democratiza la programación, pensamos en data centers en el espacio.\n\n¿Estamos preparados para este salto cósmico en tecnología? ¿Qué implicaciones tendrá para la industria y la sociedad? 🌌🛰️💾",
+                imagen: "https://i.ibb.co/RTQJwNJ3/538dbf05e4ba.jpg"
+            }
+        ];
+
+        // ====== Render tabla ======
+        const tbody = document.querySelector('#articlesTable tbody');
+        function renderTable() {
+            tbody.innerHTML = '';
+            ARTICLES.forEach(a => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+          <td><a href="#ver" class="rowlink" data-id="${a.id}">${a.titulo}</a></td>
+          <td>${a.descripcion}</td>
+          <td><img class="thumb" src="${a.imagen}" alt="${a.titulo}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #ddd;"></td>
+          <td><button class="btn primary" data-id="${a.id}">Ver</button></td>
+        `;
+                tbody.appendChild(tr);
+            });
+        }
+        renderTable();
+
+        // ====== Mostrar artículo ======
+        const viewTable = document.getElementById('view-table');
+        const viewPost = document.getElementById('view-post');
+        const postContainer = document.getElementById('postContainer');
+
+        tbody.addEventListener('click', (e) => {
+            const el = e.target.closest('[data-id]');
+            if (!el) return;
+            const id = el.getAttribute('data-id');
+            const art = ARTICLES.find(x => x.id === id);
+            if (art) showPost(art);
+        });
+
+        function showPost(a) {
+            postContainer.innerHTML = `
+            <div class="li-card">
+                <div class="li-header">
+                    <div class="avatar">
+                        <img src="../img/dominion_digital_banking_insurance_logo.jpg" alt="Dominion Digital" class="avatar">
+                    </div>
+                    <div>
+                        <div class="li-name">Dominion Digital • <span style="color:#0a66c2">Tú</span></div>
+                        <div class="li-sub">3.895 seguidores</div>
+                        <div class="li-time">ahora · 🌎 Público</div>
+                    </div>
+                </div>
+                <div class="li-body">
+                    <p class="li-text">
+                        ${a.titulo} <br><br>
+                        ${a.descripcion}<br><br>
+                        ¿Qué opinas? 👇
+                    </p>
+                </div>
+
+                <div class="li-media">
+                    <img src="${a.imagen}" alt="${a.titulo}">
+                </div>
+
+                <div class="li-icons">
+                    👍 🔁 💬 • 24 impresiones
+                </div>
+
+                <div class="li-actions">
+                    <div class="li-action">👍 Recomendar</div>
+                    <div class="li-action">💬 Comentar</div>
+                    <div class="li-action">🔗 Compartir</div>
+                    <div class="li-action">✉️ Enviar</div>
+                    <!-- Botones de flujo de publicación -->
+                    <p>
+                        <center>
+                    <button id="btnPublicar" class="btn primary" style="margin-left:12px;">Publicar</button>
+                    <button id="btnDescartar" class="btn" style="margin-left:4px;">Descartar</button>
+                </div>
+            </div>
+      `;
+
+            // Lógica de botones Publicar / Descartar
+            const btnPublicar = document.getElementById('btnPublicar');
+            const btnDescartar = document.getElementById('btnDescartar');
+
+            btnPublicar.addEventListener('click', () => {
+                btnPublicar.style.backgroundColor = 'green';
+                btnPublicar.style.color = '#fff';
+                btnPublicar.textContent = 'Publicado';
+
+                // ❌ Deshabilitar descartar
+                btnDescartar.disabled = true;
+                btnDescartar.style.opacity = "0.5";
+                btnDescartar.style.cursor = "not-allowed";
+            });
+
+            btnDescartar.addEventListener('click', () => {
+                alert('¿Estas seguro que quieres descartar esta publicacion?');
+
+                btnDescartar.style.backgroundColor = 'red';
+                btnDescartar.style.color = '#fff';
+                btnDescartar.textContent = 'Descartado';
+
+                // ❌ Deshabilitar publicar
+                btnPublicar.disabled = true;
+                btnPublicar.style.opacity = "0.5";
+                btnPublicar.style.cursor = "not-allowed";
+            });
+
+            viewTable.style.display = 'none';
+            viewPost.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack() {
+            viewPost.style.display = 'none';
+            viewTable.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 🔹 Nuevo botón: volver al Home
+        function goHome() {
+            window.location.href = 'home.html';
+        }
+    </script>
+</body>
+
+</html>

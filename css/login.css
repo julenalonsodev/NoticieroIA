@@ -1,0 +1,183 @@
+
+/* =====================
+   Reset y estilo base
+===================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #111;
+}
+
+/* =====================
+   Cabecera azul
+===================== */
+header {
+  background-color: #002e6e;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* =====================
+   Contenido principal
+===================== */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+/* =====================
+   Tarjeta de login
+===================== */
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 32px 28px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* =====================
+   Logo encima del título
+===================== */
+.logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.logo img {
+  height: 80px;
+}
+
+/* =====================
+   Título del formulario
+===================== */
+h2 {
+  font-size: 22px;
+  color: #002e6e;
+  margin-bottom: 28px;
+}
+
+/* =====================
+   Campos de entrada
+===================== */
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  text-align: left;
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #c9c9c9;
+  margin-bottom: 18px;
+  font-size: 15px;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #002e6e;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 46, 110, 0.2);
+}
+
+/* =====================
+   Botón de login
+===================== */
+button {
+  width: 100%;
+  background-color: #002e6e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.1s;
+}
+
+button:hover {
+  background-color: #001e4a;
+  transform: translateY(-1px);
+}
+
+/* =====================
+   Enlace de restablecer contraseña
+===================== */
+.reset-link {
+  display: block;
+  margin-top: 14px;
+  text-align: center;
+  color: #002e6e;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.reset-link:hover {
+  text-decoration: underline;
+}
+
+/* =====================
+   Pie de página
+===================== */
+footer {
+  background-color: #333;
+  color: #ddd;
+  text-align: center;
+  padding: 16px;
+  font-size: 13px;
+}
+
+footer a {
+  color: #bbb;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* =====================
+   Responsividad móvil
+===================== */
+@media (max-width: 480px) {
+  header {
+    font-size: 18px;
+    height: 70px;
+  }
+
+  .login-card {
+    padding: 24px 20px;
+  }
+
+  .logo img {
+    height: 70px;
+  }
+}
+

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Dominion Demo</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+
+    <!-- Cabecera azul vacía -->
+    <header>DOMINION DIGITAL</header>
+
+    <!-- Formulario de login -->
+    <main>
+        <div class="login-card">
+            <!-- 🔹 Logo encima del título -->
+            <div class="logo">
+                <img src="/img/32164941.png" alt="Logo Dominion">
+
+            </div>
+
+            <h2>Iniciar Sesión</h2>
+
+            <form id="loginForm">
+                <label for="email">Correo</label>
+                <input type="email" id="email" placeholder="Correo" required>
+
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" placeholder="Contraseña" required>
+
+                <button type="submit">Iniciar Sesión</button>
+                <a href="#" class="reset-link">Restablecer contraseña</a>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        Copyright © Dominion Global<br>
+        Artificial Intelligence Department
+    </footer>
+
+    <script>
+        // Simulación de login (sin conexión a base de datos)
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            window.location.href = 'home.html'; // Redirección ficticia
+        });
+    </script>
+</body>
+
+</html>
