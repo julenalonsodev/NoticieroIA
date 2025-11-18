@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Noticias - AI Content Creator</title>
+
+    <!-- Estilos generales + específicos de noticias -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>styles/home.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>styles/noticias.css">
+</head>
+
+<body>
+
+    <header>AI CONTENT CREATOR - Noticias</header>
+    <div class="news-header-bar">
+        <h1 class="page-title">Noticias</h1>
+
+        <a href="<?= BASE_URL ?>index.php?controller=home" class="btn btn-back">
+            ← Volver al Home
+        </a>
+    </div>
+
+    <p class="page-sub">Listado de noticias generadas en la plataforma</p>
+
+    <?php if ($result && $result->num_rows > 0): ?>
+        <table class="news-table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Imagen</th>
+                    <th>Estados / Guardar</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <?php
+                        // Normalizamos por comodidad
+                        $notRev = $row['noticia_revisada'] ?? null;   // 'pendiente' / 'revisada' / null
+                        $imgRev = $row['imagen_revisada'] ?? null;    // 'pendiente' / 'aprobada' / null
+                        $pubVal = $row['publicado'] ?? null;          // 'borrador' / 'publicado' / null
+                    ?>
+                    <tr>
+
+                        <!-- TÍTULO COMPLETO -->
+                        <td style="max-width: 350px; white-space: normal;">
+                            <strong><?= nl2br(htmlspecialchars($row['titulo'])) ?></strong><br>
+                            <small>
+                                <?= $row['fecha_publicacion']
+                                    ? date("d/m/Y H:i", strtotime($row['fecha_publicacion']))
+                                    : "No publicada" ?>
+                            </small>
+                        </td>
+
+                        <!-- DESCRIPCIÓN COMPLETA CON SCROLL -->
+                        <td class="td-descripcion">
+                            <div class="descripcion-scroll">
+                                <?= nl2br(htmlspecialchars($row['descripcion'])) ?>
+                            </div>
+                        </td>
+
+                        <!-- IMAGEN AJUSTADA A LA ALTURA DE LA FILA -->
+                        <td class="td-imagen">
+                            <?php if (!empty($row['imagen'])): ?>
+                                <img src="<?= htmlspecialchars($row['imagen']) ?>" alt="Imagen noticia" class="img-ajustada">
+                            <?php else: ?>
+                                <em>Sin imagen</em>
+                            <?php endif; ?>
+                        </td>
+
+                        <!-- ESTADOS + GUARDAR -->
+                        <td>
+                            <form method="POST" action="<?= BASE_URL ?>controllers/guardar_noticia.php" class="news-form">
+                                <input type="hidden" name="id" value="<?= (int) $row['id'] ?>">
+
+                                <!-- NOTICIA -->
+                                <div class="field-group">
+                                    <label>Noticia</label>
+                                    <select name="noticia_revisada" class="select-status">
+                                        <!-- vacío: solo seleccionado cuando es NULL o cadena vacía en la BD -->
+                                        <option value=" " <?= ($notRev === null || $notRev === '') ? 'selected' : '' ?>></option>
+
+                                        <option value="pendiente" <?= ($notRev === 'pendiente') ? 'selected' : '' ?>>
+                                            Pendiente
+                                        </option>
+
+                                        <option value="revisada" <?= ($notRev === 'revisada') ? 'selected' : '' ?>>
+                                            Revisada
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- IMAGEN -->
+                                <div class="field-group">
+                                    <label>Imagen</label>
+                                    <select name="imagen_revisada" class="select-status">
+                                        <option value=" " <?= ($imgRev === null || $imgRev === '') ? 'selected' : '' ?>></option>
+
+                                        <option value="pendiente" <?= ($imgRev === 'pendiente') ? 'selected' : '' ?>>
+                                            Pendiente
+                                        </option>
+
+                                        <option value="aprobada" <?= ($imgRev === 'aprobada') ? 'selected' : '' ?>>
+                                            Aprobada
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- PUBLICACIÓN -->
+                                <div class="field-group">
+                                    <label>Publicación</label>
+                                    <select name="publicado" class="select-status">
+                                        <option value=" " <?= ($pubVal === null || $pubVal === '') ? 'selected' : '' ?>></option>
+
+                                        <option value="borrador" <?= ($pubVal === 'borrador') ? 'selected' : '' ?>>
+                                            Borrador
+                                        </option>
+
+                                        <option value="publicado" <?= ($pubVal === 'publicado') ? 'selected' : '' ?>>
+                                            Publicado
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="btn primary btn-sm" style="margin-top:8px; margin-bottom: 8px;">
+                                    Guardar
+                                </button>
+                            </form>
+                        </td>
+
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+
+    <?php else: ?>
+        <p>No hay noticias creadas todavía.</p>
+    <?php endif; ?>
+    </main>
+
+</body>
+
+</html>

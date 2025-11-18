@@ -7,7 +7,7 @@
     <title>Home - AI Content Creator</title>
 
     <!-- CSS DEL HOME -->
-    <link rel="stylesheet" href="./styles/home.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>styles/home.css">
 </head>
 
 <body>
@@ -18,40 +18,31 @@
     <!-- LAYOUT PRINCIPAL -->
     <div class="layout">
 
-        <!-- ================================
-             ASIDE CON INFORMACIÓN DEL USUARIO
-        =================================== -->
+        <!-- ASIDE CON INFO USUARIO -->
         <aside>
-
-            <!-- BLOQUE SUPERIOR -->
             <div>
-                <!-- AVATAR (inicial del nombre) -->
                 <div class="user-avatar">
                     <?= strtoupper(substr($usuario['nombre'], 0, 1)) ?>
                 </div>
 
-                <!-- NOMBRE COMPLETO -->
                 <div class="user-block-name">
                     <?= htmlspecialchars($usuario['nombre']) ?>
                     <?= htmlspecialchars($usuario['apellidos']) ?>
                 </div>
 
-                <!-- EMAIL -->
                 <div class="user-block-email">
                     <?= htmlspecialchars($usuario['email']) ?>
                 </div>
 
-                <!-- DATOS EXTRA -->
                 <div style="margin-top: 14px; font-size:13px; color:var(--muted); text-align:center;">
                     <p>DNI: <?= htmlspecialchars($usuario['dni']) ?></p>
                     <p>Empresa Nº: <?= htmlspecialchars($usuario['numero_empresa']) ?></p>
                 </div>
 
-                <!-- MENÚ DEL ASIDE -->
                 <nav class="aside-menu" style="margin-top:25px;">
                     <ul>
                         <li><a class="active" href="#"><span>🏠</span> Inicio</a></li>
-                        <li><a href="#"><span>📝</span> Mis artículos</a></li>
+<li><a href="index.php?controller=noticias"><span>📝</span> Noticias</a></li>
                         <li><a href="#"><span>🎛️</span> Preferencias</a></li>
                         <li><a href="#"><span>⚙️</span> Ajustes</a></li>
                         <li><a href="#"><span>❓</span> Ayuda</a></li>
@@ -59,46 +50,145 @@
                     </ul>
                 </nav>
             </div>
-
-            <!-- PIE DEL ASIDE -->
-            <div class="aside-footer">
-                AI Content Creator v1.0
-            </div>
         </aside>
 
-        <!-- ================================
-             MAIN CONTENT (CONTENIDO PRINCIPAL)
-        =================================== -->
+        <!-- MAIN -->
+        <?php
+        require_once __DIR__ . '/../db/db.php';
+
+        $conexion = Database::conectar();
+
+        $sql = "SELECT id, tema, descripcion, frecuencia, cantidad, idioma 
+        FROM planificacioncontenido
+        ORDER BY id DESC";
+
+        $result = $conexion->query($sql);
+        ?>
+
         <main>
-            <h1 class="page-title">Panel de usuario</h1>
-            <p class="page-sub">Bienvenido a tu área personal</p>
+            <h1 class="page-title">Géneros</h1>
+            <p class="page-sub">Selecciona una categoría para continuar</p>
 
-            <section class="list">
+            <?php if ($result && $result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <article class="card">
+                        <div class="card-header">
+                            <h3><?= htmlspecialchars($row['tema']) ?></h3>
 
-                <!-- <article class="card">
-                    <h3>Tu Perfil</h3>
-                    <p>Nombre: <?= htmlspecialchars($usuario['nombre']) ?> <?= htmlspecialchars($usuario['apellidos']) ?></p>
-                    <p>Email: <?= htmlspecialchars($usuario['email']) ?></p>
-                    <p>DNI: <?= htmlspecialchars($usuario['dni']) ?></p>
-                    <p>Empresa Nº: <?= htmlspecialchars($usuario['numero_empresa']) ?></p>
-                </article> -->
+                            <form method="POST" action="<?= BASE_URL ?>controllers/eliminar_genero.php" class="delete-form">
+                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                <button type="submit" class="btn btn-delete"
+                                    onclick="return confirm('¿Seguro que deseas eliminar este género?');">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
 
-                <article class="card">
-                    <h3>Próximas funciones</h3>
-                    <p>📌 Generación de artículos con IA</p>
-                    <p>📌 Panel avanzado</p>
-                    <p>📌 Guardado automático</p>
-                </article>
+                        <p><?= htmlspecialchars($row['descripcion']) ?></p>
+                        <p>
+                            <?= htmlspecialchars($row['frecuencia']) ?>
+                            • <?= (int) $row['cantidad'] ?>
+                            • <?= strtoupper(htmlspecialchars($row['idioma'])) ?>
+                        </p>
 
-            </section>
+                        <a href="articulos.html">Ir a artículos →</a>
+                    </article>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <p>No hay géneros todavía. Crea uno con el botón “+”.</p>
+            <?php endif; ?>
 
         </main>
 
+        <?php
+        $conexion->close();
+        ?>
     </div>
 
+    <!-- FOOTER -->
     <footer>
         © 2025 AI Content Creator - Todos los derechos reservados
     </footer>
+
+    <!-- BOTÓN FLOTANTE -->
+    <button id="fabAdd" class="fab" aria-label="Añadir Género" title="Añadir Género">+</button>
+
+    <!-- MODAL NUEVO GÉNERO -->
+    <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="modal-title">Nuevo Género</h3>
+                <button class="btn ghost" id="btnClose">✕</button>
+            </div>
+
+            <form id="genreForm" method="POST" action="<?= BASE_URL ?>controllers/guardar_genero.php">
+                <div class="modal-body">
+
+                    <div>
+                        <label for="tema">Tema</label>
+                        <input type="text" id="tema" name="tema" required placeholder="Ej: Tendencias de IA">
+                    </div>
+
+                    <div>
+                        <label for="descripcion">Descripción</label>
+                        <input type="text" id="descripcion" name="descripcion" required
+                            placeholder="Ej: La IA avanza rápidamente">
+                    </div>
+                    <div>
+                        <label for="frecuencia">Frecuencia</label>
+                        <select id="frecuencia" name="frecuencia" required>
+                            <option value="" disabled selected>Selecciona…</option>
+                            <option>Diario</option>
+                            <option>Semanal</option>
+                            <option>Mensual</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="cantidad">Cantidad</label>
+                        <input type="number" id="cantidad" name="cantidad" required min="1" max="100"
+                            placeholder="Ej: 10">
+                    </div>
+
+                    <div id="addSourcesContainer">
+                        <label for="addSources">¿Añadir Fuentes?</label>
+                        <select id="addSources" name="addSources">
+                            <option value="no" selected>No</option>
+                            <option value="si">Sí</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="idioma">Idioma</label>
+                        <select id="idioma" name="idioma" required>
+                            <option value="" disabled selected>Selecciona…</option>
+                            <option value="es">Español</option>
+                            <option value="en">Inglés</option>
+                            <option value="fr">Francés</option>
+                        </select>
+                    </div>
+
+                    <div id="sourcesSection" class="sources-section">
+                        <label>Fuentes</label>
+                        <div id="sourcesList"></div>
+                        <button type="button" class="btn add-source" id="btnAddSource">+ Añadir fuente</button>
+                    </div>
+
+                    <!-- Campo oculto donde guardaremos las fuentes en JSON -->
+                    <input type="hidden" id="fuentes" name="fuentes">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn ghost" id="btnCancel">Cancelar</button>
+                    <button type="submit" class="btn primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="<?= BASE_URL ?>code/home.js"></script>
+    <script src="<?= BASE_URL ?>code/generos.js"></script>
 
 </body>
 

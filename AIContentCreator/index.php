@@ -7,6 +7,9 @@ error_reporting(E_ALL);
 // Cargar conexión BD
 require_once "db/db.php";
 
+// 🔹 URL base del proyecto (se calcula a partir de index.php)
+define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') . '/');
+
 // Router básico
 $controller = isset($_GET['controller']) ? $_GET['controller'] : 'start';
 
@@ -21,6 +24,10 @@ switch ($controller) {
 
     case 'auth':
         require_once "controllers/auth_controller.php";
+        break;
+
+    case 'noticias':
+        require_once "controllers/noticias_controller.php";
         break;
 
     default:

@@ -437,15 +437,28 @@
                             <option value="es">Español</option>
                             <option value="en">Inglés</option>
                             <option value="fr">Francés</option>
-                        </select>
+                            <div>
+                                <label for="addSources">¿Añadir Fuentes?</label>
+                                <select id="addSources" name="addSources">
+                                    <option value="no">No</option>
+                                    <option value="si">Sí</option>
+                                </select>
+                            </div>
+                            <div id="sourcesSection" class="sources-section">
+                                <label>Fuentes</label>
+                                <div id="sourcesList"></div>
+                                <button type="button" class="btn add-source" id="btnAddSource">+ Añadir fuente</button>
+                            </div>
                     </div>
+                    </select>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn ghost" id="btnCancel">Cancelar</button>
-                    <button type="submit" class="btn primary">Guardar</button>
-                </div>
-            </form>
         </div>
+        <div class="modal-footer">
+            <button type="button" class="btn ghost" id="btnCancel">Cancelar</button>
+            <button type="submit" class="btn primary">Guardar</button>
+        </div>
+        </form>
+    </div>
     </div>
 
     <script>
