@@ -43,3 +43,4 @@ $result = $conexion->query($sql);
 require_once "views/noticias_view.phtml";
 
 $conexion->close();
+    //  <!-- HOLA RUBEN -->

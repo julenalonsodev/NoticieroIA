@@ -52,3 +52,4 @@ $conexion->close();
 
 header("Location: ../index.php?controller=noticias");
 exit;
+    //  <!-- HOLA RUBEN -->

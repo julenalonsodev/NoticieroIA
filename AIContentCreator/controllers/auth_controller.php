@@ -170,3 +170,4 @@ switch ($accion) {
         header("Location: index.php?controller=auth&action=login");
         exit;
 }
+    //  <!-- HOLA RUBEN -->

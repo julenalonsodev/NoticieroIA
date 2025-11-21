@@ -9,6 +9,7 @@ require_once "db/db.php";
 
 // 🔹 URL base del proyecto (se calcula a partir de index.php)
 define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') . '/');
+        //       <!-- HOLA RUBEN -->
 
 // Router básico
 $controller = isset($_GET['controller']) ? $_GET['controller'] : 'start';

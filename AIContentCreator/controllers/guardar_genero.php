@@ -83,3 +83,4 @@ $conexion->close();
 // --------------------------------------------
 header("Location: ../index.php?controller=home&action=index");
 exit;
+    //  <!-- HOLA RUBEN -->

@@ -28,3 +28,4 @@ $conexion->close();
 // Volver al home tras eliminar
 header("Location: ../index.php?controller=home&action=index&deleted=1");
 exit;
+    //  <!-- HOLA RUBEN -->
