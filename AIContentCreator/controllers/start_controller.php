@@ -9,3 +9,4 @@ if (isset($_SESSION['usuario'])) {
 
 // Si NO hay sesión, mostramos la start view
 require "views/start_view.phtml";
+    //  <!-- HOLA RUBEN -->

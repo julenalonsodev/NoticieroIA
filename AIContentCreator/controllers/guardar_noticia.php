@@ -95,18 +95,4 @@ try {
 
 header("Location: ../index.php?controller=noticias");
 exit;
-
-// ------------------------------------------------------------------------
-// Notas rápidas
-
-// Uso id numérico propio, igual que en tu código MySQL (no _id de Mongo).
-
-// COALESCE lo replicamos no tocando los campos cuando el valor viene null.
-
-// La lógica de publicado y fecha_publicacion es la misma que tenías:
-
-// 'publicado' → pone fecha si no la tenía.
-
-// 'borrador' → la borra.
-
-// null → deja todo igual.
+    //  <!-- HOLA RUBEN -->

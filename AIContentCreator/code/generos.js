@@ -67,3 +67,4 @@ document.addEventListener('DOMContentLoaded', function () {
         // OJO: no usamos preventDefault → el formulario se envía al PHP
     });
 });
+    //  <!-- HOLA RUBEN -->

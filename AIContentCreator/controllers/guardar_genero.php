@@ -127,3 +127,4 @@ exit;
 // Cada planificación se guarda con:
 
 // dni_usuario y numero_empresa_usuario sacados de $_SESSION['usuario'].
+    //  <!-- HOLA RUBEN -->
