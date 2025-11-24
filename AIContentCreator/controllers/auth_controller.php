@@ -57,7 +57,9 @@ switch ($accion) {
                 $user = $userModel->buscarPorEmail($email_form);
 
                 if ($user && password_verify($password, $user['password'])) {
+                    // Guardamos todo el documento en sesión (incluido _id de Mongo)
                     $_SESSION['usuario'] = $user;
+
                     // Recorrido: login -> home
                     header("Location: index.php?controller=home");
                     exit;
@@ -124,7 +126,7 @@ switch ($accion) {
                 $errores[] = "El email ya está registrado";
             }
 
-            // 7. DNI ya registrado (si tienes buscarPorDNI en el modelo)
+            // 7. DNI ya registrado
             if (!empty($dni)) {
                 $dniExistente = $userModel->buscarPorDNI($dni);
                 if ($dniExistente) {
@@ -189,8 +191,8 @@ switch ($accion) {
                     header("Location: index.php?controller=auth&action=login");
                     exit;
                 } elseif ($resultado === "duplicate") {
-                    // Por si MySQL lanza clave duplicada igualmente
-                    $errores[] = "Ese DNI ya está registrado";
+                    // En Mongo puede ser DNI o email (por índices únicos)
+                    $errores[] = "El DNI o el email ya está registrado";
                 } else {
                     $errores[] = "Error al registrar el usuario";
                 }

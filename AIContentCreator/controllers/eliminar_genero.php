@@ -13,19 +13,55 @@ if (!isset($_POST['id'])) {
 
 $id = intval($_POST['id']);
 
-$conexion = Database::conectar();
+// Conectamos a MongoDB
+$db = Database::conectar();
+$coleccion = $db->selectCollection('planificacioncontenido');
 
-$stmt = $conexion->prepare("DELETE FROM planificacioncontenido WHERE id = ?");
-$stmt->bind_param("i", $id);
+try {
+    // Eliminamos por tu campo "id" propio
+    $resultado = $coleccion->deleteOne(['id' => $id]);
 
-if (!$stmt->execute()) {
-    die("Error al eliminar: " . $stmt->error);
+    if ($resultado->getDeletedCount() === 0) {
+        die("Error: no existe un registro con ese ID.");
+    }
+} catch (Exception $e) {
+    die("Error al eliminar: " . $e->getMessage());
 }
-
-$stmt->close();
-$conexion->close();
 
 // Volver al home tras eliminar
 header("Location: ../index.php?controller=home&action=index&deleted=1");
 exit;
+
+// ------------------------------------------------------------------------
+// ✅ ¿Cómo funciona esto en Mongo?
+
+// Se conecta así:
+
+// $db = Database::conectar();
+// $coleccion = $db->selectCollection('planificacioncontenido');
+
+
+// Y elimina con:
+
+// $coleccion->deleteOne(['id' => $id]);
+
+
+// Mongo devuelve:
+
+// DeletedCount = 1 → eliminado correcto
+
+// DeletedCount = 0 → no había documento con ese id
+
+// Lo controlo en el código.
+
+// ⚠️ IMPORTANTE: Para que esto funcione, debes asegurarte de que cada documento tiene su id propio.
+
+// Ejemplo al insertar:
+
+// $coleccion->insertOne([
+//     'id' => 1,
+//     'tema' => '...',
+//     'dni_usuario' => '...',
+//     // etc
+// ]);
     //  <!-- HOLA RUBEN -->

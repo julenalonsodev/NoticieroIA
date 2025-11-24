@@ -2,55 +2,74 @@
 // conectamos con la BD
 require_once __DIR__ . "/../db/db.php";
 
-class user_model {
+use MongoDB\Driver\Exception\BulkWriteException;
 
-    private $db;
+class user_model
+{
+    private $db;          // MongoDB\Database
+    private $collection;  // MongoDB\Collection
 
     public function __construct()
     {
-        // Ajusta a tu forma real de conectar
-        $this->db = Database::conectar(); // que devuelva un mysqli
+        // Ahora conectar() devuelve una MongoDB\Database
+        $this->db = Database::conectar();
+        $this->collection = $this->db->selectCollection('users');
+    }
+
+    /**
+     * Convierte un BSONDocument a array asociativo PHP
+     */
+    private function docToArray($doc): array
+    {
+        // Forma simple y segura
+        return json_decode(json_encode($doc), true);
     }
 
     public function buscarPorEmail($email)
     {
-        $sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_assoc(); // o null si no existe
+        $doc = $this->collection->findOne(['email' => $email]);
+
+        return $doc ? $this->docToArray($doc) : null;
     }
 
     public function buscarPorDNI($dni)
     {
-        $sql = "SELECT * FROM users WHERE dni = ? LIMIT 1";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("s", $dni);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_assoc(); // o null si no existe
+        $doc = $this->collection->findOne(['dni' => $dni]);
+
+        return $doc ? $this->docToArray($doc) : null;
     }
 
     public function registrar($dni, $nombre, $apellidos, $numero_empresa, $email, $password)
     {
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO users (dni, nombre, apellidos, numero_empresa, email, password)
-                VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("sssiss", $dni, $nombre, $apellidos, $numero_empresa, $email, $hash);
+        $documento = [
+            'dni'            => (string)$dni,
+            'nombre'         => (string)$nombre,
+            'apellidos'      => (string)$apellidos,
+            'numero_empresa' => (int)$numero_empresa,
+            'email'          => (string)$email,
+            'password'       => (string)$hash,
+        ];
 
-        if ($stmt->execute()) {
-            return true;
-        } else {
-            // Error por clave duplicada (dni PK o email UNIQUE)
-            if ($this->db->errno == 1062) {
-                return "duplicate";
+        try {
+            $resultado = $this->collection->insertOne($documento);
+
+            return $resultado->getInsertedCount() === 1;
+        } catch (BulkWriteException $e) {
+            // 11000 = duplicate key error en MongoDB
+            $writeResult = $e->getWriteResult();
+            foreach ($writeResult->getWriteErrors() as $err) {
+                if ($err->getCode() === 11000) {
+                    return "duplicate";
+                }
             }
+            return false;
+        } catch (\Throwable $e) {
+            // Cualquier otro error
+            error_log('Error al registrar usuario en MongoDB: ' . $e->getMessage());
             return false;
         }
     }
 }
 ?>
-     <!-- HOLA RUBEN -->
