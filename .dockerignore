@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Dependencies
+beta/node/node_modules
+node_modules
+
+# Environment files (will be provided by EasyPanel)
+.env
+.env.local
+
+# Documentation
+*.md
+!beta/node/*.md
+
+# Docker files
+docker-compose.yml
+Dockerfile
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# Exclude PHP application
+AIContentCreator/

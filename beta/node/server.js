@@ -10,7 +10,24 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());           // Permite solicitudes desde cualquier origen (útil para localhost)
 app.use(bodyParser.json()); // Permite leer JSON del body
 
-// Ruta para insertar datos del formulario
+// Root route
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'NoticieroIA API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      generos: 'POST /api/generos'
+    }
+  });
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.post('/api/generos', async (req, res) => {
   try {
     console.log('Datos recibidos del formulario:', req.body); // <-- Aquí se ve qué datos llegan

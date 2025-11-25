@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const uri = process.env.MONGO_URI; // mongodb+srv://usuario:password@cluster.mongodb.net/AIContentCreator
+const uri = process.env.MONGODB_URI || process.env.MONGO_URI; // Support both variable names
 let client;
 
 async function conectar() {
