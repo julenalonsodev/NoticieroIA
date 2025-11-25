@@ -2,16 +2,41 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 const { conectar } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());           // Permite solicitudes desde cualquier origen (útil para localhost)
+// Middleware
+app.use(cors());           // Permite solicitudes desde cualquier origen
 app.use(bodyParser.json()); // Permite leer JSON del body
 
-// Root route
+// Servir archivos estáticos
+app.use('/css', express.static(path.join(__dirname, '../css')));
+app.use('/js', express.static(path.join(__dirname, '../js')));
+app.use('/img', express.static(path.join(__dirname, '../img')));
+app.use('/vistas', express.static(path.join(__dirname, '../vistas')));
+
+// Rutas para las vistas HTML
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../vistas/login.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../vistas/login.html'));
+});
+
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(__dirname, '../vistas/home.html'));
+});
+
+app.get('/articulos', (req, res) => {
+  res.sendFile(path.join(__dirname, '../vistas/articulos.html'));
+});
+
+// API Info endpoint
+app.get('/api', (req, res) => {
   res.json({
     status: 'ok',
     message: 'NoticieroIA API',
@@ -52,8 +77,12 @@ app.post('/api/generos', async (req, res) => {
 // Start server on 0.0.0.0 to be accessible from outside the container
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Servidor corriendo en http://0.0.0.0:${PORT}`);
-  console.log(`📍 Endpoints disponibles:`);
-  console.log(`   GET  / - API info`);
+  console.log(`📍 Páginas disponibles:`);
+  console.log(`   GET  / - Login`);
+  console.log(`   GET  /home - Home`);
+  console.log(`   GET  /articulos - Artículos`);
+  console.log(`📍 API Endpoints:`);
+  console.log(`   GET  /api - API info`);
   console.log(`   GET  /health - Health check`);
   console.log(`   POST /api/generos - Insertar contenido`);
   console.log(`🔧 MongoDB URI configurado: ${process.env.MONGODB_URI ? 'Sí' : 'No'}`);

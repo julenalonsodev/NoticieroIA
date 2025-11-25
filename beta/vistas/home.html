@@ -366,7 +366,7 @@
                     <li><a href="#">📰 News</a></li>
                     <li><a href="#">📊 Reports</a></li>
                     <li><a href="#">❓ Help</a></li>
-                    <li><a href="/vistas/login.html"> ⏻ Sign Out </a></li>
+                    <li><a href="/login"> ⏻ Sign Out </a></li>
                 </ul>
             </div>
             <div class="aside-footer">Dominion v1.0</div>
@@ -384,7 +384,7 @@
                     <h3>Artículos para LinkedIn</h3>
                     <p>Ideas y publicaciones con formato listo para LinkedIn.</p>
                     <p>Diario • 5 • ES</p>
-                    <a href="articulos.html">Ir a artículos →</a>
+                    <a href="/articulos">Ir a artículos →</a>
                 </article>
                 <article class="card">
                     <h3>Notas de producto</h3>
@@ -517,22 +517,26 @@ form.addEventListener('submit', async e => {
     };
 
     try {
-        const response = await fetch("https://juuleen.app.n8n.cloud/webhook-test/d802510b-9787-4c9d-9d5c-a730d3f52395", {
+        const response = await fetch("/api/generos", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
 
         if (response.ok) {
-            alert("Datos enviados correctamente a n8n y MongoDB 🎉");
+            const result = await response.json();
+            alert("Datos enviados correctamente a MongoDB 🎉");
             closeModal();
+            // Recargar la página para mostrar el nuevo género
+            window.location.reload();
         } else {
-            alert("Error en el servidor al procesar los datos ❌");
+            const error = await response.json();
+            alert(`Error en el servidor: ${error.error || 'Error desconocido'} ❌`);
         }
 
     } catch (err) {
         console.error(err);
-        alert("Error de conexión. Verifica que n8n está escuchando.");
+        alert("Error de conexión. Verifica que el servidor esté funcionando.");
     }
 });
 </script>

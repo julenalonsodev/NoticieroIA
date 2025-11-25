@@ -28,6 +28,12 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --chown=nodejs:nodejs beta/node/*.js ./
 COPY --chown=nodejs:nodejs beta/node/.env* ./
 
+# Copy static files (HTML, CSS, JS, images) maintaining beta/ structure
+COPY --chown=nodejs:nodejs beta/vistas ./vistas
+COPY --chown=nodejs:nodejs beta/css ./css
+COPY --chown=nodejs:nodejs beta/js ./js
+COPY --chown=nodejs:nodejs beta/img ./img
+
 # Switch to non-root user
 USER nodejs
 
