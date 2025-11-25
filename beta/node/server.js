@@ -115,7 +115,7 @@ app.get('/debug/files', (req, res) => {
 
 app.post('/api/generos', async (req, res) => {
   try {
-    console.log('Datos recibidos del formulario:', req.body); // <-- Aquí se ve qué datos llegan
+    console.log('Datos recibidos del formulario:', req.body);
     const db = await conectar();
     const coleccion = db.collection('planificacioncontenido');
 
@@ -126,12 +126,23 @@ app.post('/api/generos', async (req, res) => {
       fecha_ingreso: new Date()
     });
 
-    console.log('Documento insertado con ID:', resultado.insertedId); // <-- DEBUG
+    console.log('Documento insertado con ID:', resultado.insertedId);
     res.json({ status: 'ok', id: resultado.insertedId });
   } catch (err) {
-    console.error(err);
+    console.error('Error en /api/generos:', err);
     res.status(500).json({ status: 'error', error: err.message });
   }
+});
+
+// Endpoint de prueba simple (no depende de MongoDB ni archivos)
+app.get('/test', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'Servidor Node.js funcionando correctamente',
+    timestamp: new Date().toISOString(),
+    port: PORT,
+    __dirname: __dirname
+  });
 });
 
 // Middleware para manejar 404
@@ -140,22 +151,40 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada', path: req.url });
 });
 
-// Start server on 0.0.0.0 to be accessible from outside the container
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ Servidor corriendo en http://0.0.0.0:${PORT}`);
-  console.log(`📂 Directorio de trabajo: ${__dirname}`);
-  console.log(`📂 Rutas de archivos estáticos:`);
-  console.log(`   CSS: ${path.join(__dirname, './css')}`);
-  console.log(`   JS: ${path.join(__dirname, './js')}`);
-  console.log(`   Imágenes: ${path.join(__dirname, './img')}`);
-  console.log(`   Vistas: ${path.join(__dirname, './vistas')}`);
-  console.log(`📍 Páginas disponibles:`);
-  console.log(`   GET  / - Login`);
-  console.log(`   GET  /home - Home`);
-  console.log(`   GET  /articulos - Artículos`);
-  console.log(`📍 API Endpoints:`);
-  console.log(`   GET  /api - API info`);
-  console.log(`   GET  /health - Health check`);
-  console.log(`   POST /api/generos - Insertar contenido`);
-  console.log(`🔧 MongoDB URI configurado: ${process.env.MONGODB_URI ? 'Sí' : 'No'}`);
+// Manejo de errores no capturados
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+  // No salir del proceso para mantener el servidor corriendo
 });
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  // No salir del proceso para mantener el servidor corriendo
+});
+
+// Start server on 0.0.0.0 to be accessible from outside the container
+try {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Servidor corriendo en http://0.0.0.0:${PORT}`);
+    console.log(`📂 Directorio de trabajo: ${__dirname}`);
+    console.log(`📂 Rutas de archivos estáticos:`);
+    console.log(`   CSS: ${path.join(__dirname, './css')}`);
+    console.log(`   JS: ${path.join(__dirname, './js')}`);
+    console.log(`   Imágenes: ${path.join(__dirname, './img')}`);
+    console.log(`   Vistas: ${path.join(__dirname, './vistas')}`);
+    console.log(`📍 Páginas disponibles:`);
+    console.log(`   GET  / - Login`);
+    console.log(`   GET  /home - Home`);
+    console.log(`   GET  /articulos - Artículos`);
+    console.log(`📍 API Endpoints:`);
+    console.log(`   GET  /api - API info`);
+    console.log(`   GET  /health - Health check`);
+    console.log(`   GET  /debug/files - Debug archivos`);
+    console.log(`   POST /api/generos - Insertar contenido`);
+    console.log(`🔧 MongoDB URI configurado: ${process.env.MONGODB_URI || process.env.MONGO_URI ? 'Sí' : 'No'}`);
+    console.log(`🔧 PORT: ${PORT}`);
+  });
+} catch (err) {
+  console.error('❌ Error al iniciar el servidor:', err);
+  process.exit(1);
+}
