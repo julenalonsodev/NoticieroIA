@@ -1,0 +1,20 @@
+[variables]
+NODE_ENV = "production"
+
+[phases.setup]
+nixPkgs = ["nodejs-20_x"]
+
+[phases.install]
+cmds = [
+  "cd beta/node && npm install --production"
+]
+
+[start]
+cmd = "cd beta/node && node server.js"
+
+[staticAssets]
+"beta/vistas" = "/app/vistas"
+"beta/css" = "/app/css"
+"beta/js" = "/app/js"
+"beta/img" = "/app/img"
+

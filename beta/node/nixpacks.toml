@@ -1,0 +1,22 @@
+[variables]
+NODE_ENV = "production"
+
+[phases.install]
+cmds = [
+  "npm install --production"
+]
+
+# Copiar archivos estáticos después de instalar dependencias
+[phases.build]
+cmds = [
+  "mkdir -p ./vistas ./css ./js ./img || true",
+  "cp -r ../vistas/* ./vistas/ 2>/dev/null || echo 'Warning: vistas not found'",
+  "cp -r ../css/* ./css/ 2>/dev/null || echo 'Warning: css not found'",
+  "cp -r ../js/* ./js/ 2>/dev/null || echo 'Warning: js not found'",
+  "cp -r ../img/* ./img/ 2>/dev/null || echo 'Warning: img not found'",
+  "ls -la . && ls -la vistas 2>/dev/null || echo 'vistas directory check'"
+]
+
+[start]
+cmd = "node server.js"
+
