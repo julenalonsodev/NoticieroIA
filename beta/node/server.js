@@ -12,8 +12,8 @@ app.use(bodyParser.json()); // Permite leer JSON del body
 
 // Root route
 app.get('/', (req, res) => {
-  res.json({ 
-    status: 'ok', 
+  res.json({
+    status: 'ok',
     message: 'NoticieroIA API',
     version: '1.0.0',
     endpoints: {
@@ -49,6 +49,12 @@ app.post('/api/generos', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+// Start server on 0.0.0.0 to be accessible from outside the container
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Servidor corriendo en http://0.0.0.0:${PORT}`);
+  console.log(`📍 Endpoints disponibles:`);
+  console.log(`   GET  / - API info`);
+  console.log(`   GET  /health - Health check`);
+  console.log(`   POST /api/generos - Insertar contenido`);
+  console.log(`🔧 MongoDB URI configurado: ${process.env.MONGODB_URI ? 'Sí' : 'No'}`);
 });
