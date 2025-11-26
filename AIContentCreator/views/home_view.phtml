@@ -20,31 +20,43 @@
         <aside>
             <div>
                 <div class="user-avatar">
-                    <?= strtoupper(substr($usuario['nombre'], 0, 1)) ?>
+                    <?= strtoupper(substr($usuario['nombre'] ?? '', 0, 1)) ?>
                 </div>
 
                 <div class="user-block-name">
-                    <?= htmlspecialchars($usuario['nombre']) ?>
-                    <?= htmlspecialchars($usuario['apellidos']) ?>
+                    <?= htmlspecialchars($usuario['nombre'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                    <?= htmlspecialchars($usuario['apellidos'] ?? '', ENT_QUOTES, 'UTF-8') ?>
                 </div>
 
                 <div class="user-block-email">
-                    <?= htmlspecialchars($usuario['email']) ?>
+                    <?= htmlspecialchars($usuario['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>
                 </div>
 
                 <div style="margin-top: 14px; font-size:13px; color:var(--muted); text-align:center;">
-                    <p>DNI: <?= htmlspecialchars($usuario['dni']) ?></p>
-                    <p>Empresa Nº: <?= htmlspecialchars($usuario['numero_empresa']) ?></p>
+                    <p>DNI: <?= htmlspecialchars($usuario['dni'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                    <p>Empresa Nº: <?= htmlspecialchars($usuario['numero_empresa'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
 
                 <nav class="aside-menu" style="margin-top:25px;">
                     <ul>
-                        <li><a class="active" href="#"><span>🏠</span> Inicio</a></li>
-                        <li><a href="index.php?controller=noticias"><span>📝</span> Noticias</a></li>
+                        <li>
+                            <a class="active" href="<?= BASE_URL ?>index.php?controller=home">
+                                <span>🏠</span> Inicio
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>index.php?controller=noticias">
+                                <span>📝</span> Noticias
+                            </a>
+                        </li>
                         <li><a href="#"><span>🎛️</span> Preferencias</a></li>
                         <li><a href="#"><span>⚙️</span> Ajustes</a></li>
                         <li><a href="#"><span>❓</span> Ayuda</a></li>
-                        <li><a href="index.php?controller=auth&action=logout"><span>⏻</span> Cerrar sesión</a></li>
+                        <li>
+                            <a href="<?= BASE_URL ?>index.php?controller=auth&action=logout">
+                                <span>⏻</span> Cerrar sesión
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -55,35 +67,39 @@
             <h1 class="page-title">Géneros</h1>
             <p class="page-sub">Selecciona una categoría para continuar</p>
 
-            <?php if (!empty($generos)): ?>
+            <?php if (!empty($generos) && is_array($generos)): ?>
                 <?php foreach ($generos as $row): ?>
                     <article class="card">
                         <div class="card-header">
-                            <h3><?= htmlspecialchars($row['tema']) ?></h3>
+                            <h3><?= htmlspecialchars($row['tema'] ?? '', ENT_QUOTES, 'UTF-8') ?></h3>
 
-                            <form method="POST" action="<?= BASE_URL ?>controllers/eliminar_genero.php" class="delete-form">
-                                <input type="hidden" name="id" value="<?= (int) $row['id_genero'] ?>">
-                                <button type="submit" class="btn btn-delete"
-                                    onclick="return confirm('¿Seguro que deseas eliminar este género?');">
+                            <form method="POST"
+                                  action="<?= BASE_URL ?>controllers/eliminar_genero.php"
+                                  class="delete-form">
+                                <input type="hidden" name="id" value="<?= (int)($row['id_genero'] ?? 0) ?>">
+                                <button type="submit"
+                                        class="btn btn-delete"
+                                        onclick="return confirm('¿Seguro que deseas eliminar este género?');">
                                     Eliminar
                                 </button>
                             </form>
                         </div>
 
-                        <p><?= htmlspecialchars($row['descripcion']) ?></p>
+                        <p><?= htmlspecialchars($row['descripcion'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
                         <p>
-                            <?= htmlspecialchars($row['frecuencia']) ?>
-                            • <?= (int) $row['cantidad'] ?>
-                            • <?= strtoupper(htmlspecialchars($row['idioma'])) ?>
+                            <?= htmlspecialchars($row['frecuencia'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                            • <?= (int)($row['cantidad'] ?? 0) ?>
+                            • <?= strtoupper(htmlspecialchars($row['idioma'] ?? '', ENT_QUOTES, 'UTF-8')) ?>
                         </p>
 
-<form method="POST" action="<?= BASE_URL ?>controllers/generar_articulos.php" style="display:inline;">
-    <input type="hidden" name="id_genero" value="<?= (int)$row['id_genero'] ?>">
-    <button type="submit" class="btn-link">
-        Ir a artículos →
-    </button>
-</form>
-
+                        <form method="POST"
+                              action="<?= BASE_URL ?>controllers/generar_articulos.php"
+                              style="display:inline;">
+                            <input type="hidden" name="id_genero" value="<?= (int)($row['id_genero'] ?? 0) ?>">
+                            <button type="submit" class="btn-link">
+                                Ir a artículos →
+                            </button>
+                        </form>
 
                     </article>
                 <?php endforeach; ?>
@@ -108,10 +124,12 @@
 
             <div class="modal-header">
                 <h3 id="modalTitle" class="modal-title">Nuevo Género</h3>
-                <button class="btn ghost" id="btnClose">✕</button>
+                <button class="btn ghost" id="btnClose" type="button">✕</button>
             </div>
 
-            <form id="genreForm" method="POST" action="<?= BASE_URL ?>controllers/guardar_genero.php">
+            <form id="genreForm"
+                  method="POST"
+                  action="<?= BASE_URL ?>controllers/guardar_genero.php">
                 <div class="modal-body">
 
                     <!-- TEMA -->
@@ -131,9 +149,9 @@
                         <label for="frecuencia">Frecuencia</label>
                         <select id="frecuencia" name="frecuencia" required>
                             <option value="" disabled selected>Selecciona…</option>
-                            <option>Diario</option>
-                            <option>Semanal</option>
-                            <option>Mensual</option>
+                            <option value="Diario">Diario</option>
+                            <option value="Semanal">Semanal</option>
+                            <option value="Mensual">Mensual</option>
                         </select>
                     </div>
 
@@ -143,7 +161,7 @@
                         <input type="number" id="cantidad" name="cantidad" min="1" required>
                     </div>
 
-                    <!-- 🔥 AÑADIR FUENTES (RECUPERADO) -->
+                    <!-- AÑADIR FUENTES -->
                     <div id="addSourcesContainer">
                         <label for="addSources">¿Añadir Fuentes?</label>
                         <select id="addSources" name="addSources">
@@ -167,7 +185,9 @@
                     <div id="sourcesSection" class="sources-section">
                         <label>Fuentes</label>
                         <div id="sourcesList"></div>
-                        <button type="button" class="btn add-source" id="btnAddSource">+ Añadir fuente</button>
+                        <button type="button" class="btn add-source" id="btnAddSource">
+                            + Añadir fuente
+                        </button>
                     </div>
 
                     <!-- FUENTES EN JSON -->

@@ -160,7 +160,7 @@ switch ($accion) {
                     ];
 
                     // URL del webhook de n8n
-                    $url = 'https://digital-n8n.owolqd.easypanel.host/webhook-test/from-php-users';
+                    $url = 'https://digital-n8n.owolqd.easypanel.host/webhook/from-php-noticiero';
 
                     $ch = curl_init($url);
                     curl_setopt($ch, CURLOPT_POST, true);

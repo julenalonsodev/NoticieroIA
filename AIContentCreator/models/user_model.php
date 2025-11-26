@@ -7,6 +7,9 @@ class user_model
     /** @var PDO */
     private $pdo;
 
+    /**
+     * @throws Exception
+     */
     public function __construct()
     {
         // Ahora conectar() devuelve un PDO (MySQL)
@@ -17,28 +20,75 @@ class user_model
         }
     }
 
-    public function buscarPorEmail($email)
+    /**
+     * Busca un usuario por email.
+     *
+     * @param string $email
+     * @return array|null
+     */
+    public function buscarPorEmail(string $email): ?array
     {
         $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':email' => $email]);
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ?: null;
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':email' => trim($email)]);
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $row ?: null;
+        } catch (PDOException $e) {
+            error_log('Error al buscar usuario por email: ' . $e->getMessage());
+            return null;
+        }
     }
 
-    public function buscarPorDNI($dni)
+    /**
+     * Busca un usuario por DNI.
+     *
+     * @param string $dni
+     * @return array|null
+     */
+    public function buscarPorDNI(string $dni): ?array
     {
         $sql = "SELECT * FROM users WHERE dni = :dni LIMIT 1";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':dni' => $dni]);
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ?: null;
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':dni' => trim($dni)]);
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $row ?: null;
+        } catch (PDOException $e) {
+            error_log('Error al buscar usuario por DNI: ' . $e->getMessage());
+            return null;
+        }
     }
 
-    public function registrar($dni, $nombre, $apellidos, $numero_empresa, $email, $password)
-    {
+    /**
+     * Registra un nuevo usuario.
+     *
+     * @param string $dni
+     * @param string $nombre
+     * @param string $apellidos
+     * @param int    $numero_empresa
+     * @param string $email
+     * @param string $password
+     * @return bool|string true = ok, "duplicate" = email/dni repetido, false = otro error
+     */
+    public function registrar(
+        string $dni,
+        string $nombre,
+        string $apellidos,
+        int $numero_empresa,
+        string $email,
+        string $password
+    ) {
+        $dni            = trim($dni);
+        $nombre         = trim($nombre);
+        $apellidos      = trim($apellidos);
+        $numero_empresa = (int)$numero_empresa;
+        $email          = trim($email);
+
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
         $sql = "INSERT INTO users 
@@ -49,12 +99,12 @@ class user_model
         try {
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
-                ':dni'            => (string)$dni,
-                ':nombre'         => (string)$nombre,
-                ':apellidos'      => (string)$apellidos,
-                ':numero_empresa' => (int)$numero_empresa,
-                ':email'          => (string)$email,
-                ':password'       => (string)$hash,
+                ':dni'            => $dni,
+                ':nombre'         => $nombre,
+                ':apellidos'      => $apellidos,
+                ':numero_empresa' => $numero_empresa,
+                ':email'          => $email,
+                ':password'       => $hash,
             ]);
 
             return true;

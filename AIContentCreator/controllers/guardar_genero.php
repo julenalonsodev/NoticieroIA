@@ -26,11 +26,11 @@ if (!$pdo) {
 $tema        = isset($_POST['tema']) ? trim($_POST['tema']) : null;
 $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : null;
 $frecuencia  = isset($_POST['frecuencia']) ? trim($_POST['frecuencia']) : null;
-$cantidad    = isset($_POST['cantidad']) ? intval($_POST['cantidad']) : null;
+$cantidad    = isset($_POST['cantidad']) ? (int)$_POST['cantidad'] : null;
 $addSources  = isset($_POST['addSources']) ? trim($_POST['addSources']) : 'no';
 $idioma      = isset($_POST['idioma']) ? trim($_POST['idioma']) : null;
 
-// NUEVO: tipo de llamada para el switch del webhook
+// tipo de llamada para el switch del webhook
 $tipo_llamada = 'genero';
 
 // En el formulario el hidden se llama "fuentes"
@@ -39,11 +39,11 @@ $sources = isset($_POST['fuentes']) && $_POST['fuentes'] !== '' ? $_POST['fuente
 // --------------------------------------------
 // VALIDACIONES BÁSICAS
 // --------------------------------------------
-if (!$tema || !$descripcion || !$frecuencia || !$cantidad || !$idioma) {
+if (!$tema || !$descripcion || !$frecuencia || $cantidad === null || !$idioma) {
     die("Error: faltan campos obligatorios.");
 }
 
-if (!is_int($cantidad) || $cantidad <= 0) {
+if ($cantidad <= 0) {
     die("Error: la cantidad debe ser un número entero mayor que 0.");
 }
 
@@ -55,8 +55,7 @@ if ($sources !== null) {
 }
 
 // --------------------------------------------
-// INSERTAR EN LA BD (PDO)
-// + columna tipo_llamada
+// INSERTAR EN LA BD (PDO) + tipo_llamada
 // --------------------------------------------
 $sql = "INSERT INTO planificacioncontenido 
         (tema, descripcion, frecuencia, cantidad, addSources, idioma, sources, tipo_llamada)
@@ -73,7 +72,7 @@ try {
         ':addSources'   => $addSources,
         ':idioma'       => $idioma,
         ':sources'      => $sources,
-        ':tipo_llamada' => $tipo_llamada
+        ':tipo_llamada' => $tipo_llamada,
     ]);
 } catch (PDOException $e) {
     die("Error al insertar: " . $e->getMessage());
@@ -85,11 +84,10 @@ try {
 $id_genero = $pdo->lastInsertId();
 
 // --------------------------------------------
-// ENVIAR GÉNERO A N8N
-// Webhook ÚNICO + tipo_llamada
+// ENVIAR GÉNERO A N8N (no esperamos respuesta)
 // --------------------------------------------
 $payload = [
-    'tipo_llamada' => $tipo_llamada,   // ← CLAVE PARA EL SWITCH EN N8N
+    'tipo_llamada' => $tipo_llamada,
     'id_genero'    => (int)$id_genero,
     'tema'         => $tema,
     'descripcion'  => $descripcion,
@@ -101,25 +99,26 @@ $payload = [
     'created_at'   => date('Y-m-d H:i:s'),
 ];
 
-// PON AQUÍ EL WEBHOOK ÚNICO QUE USARÁS PARA TODO
-// (cámbialo también en el controlador de artículos)
-$n8n_url = 'https://digital-n8n.owolqd.easypanel.host/webhook-test/from-php-noticiero';
+// URL de PRODUCCIÓN del Webhook en n8n
+$n8n_url = 'https://digital-n8n.owolqd.easypanel.host/webhook/from-php-noticiero';
 
 $ch = curl_init($n8n_url);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json',
+curl_setopt_array($ch, [
+    CURLOPT_POST           => true,
+    CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+    CURLOPT_POSTFIELDS     => json_encode($payload),
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT        => 20,
 ]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 $response  = curl_exec($ch);
 $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $curlError = curl_error($ch);
 curl_close($ch);
 
-if ($httpCode < 200 || $httpCode >= 300 || $curlError) {
-    error_log("Error enviando género a n8n: HTTP $httpCode — RESPUESTA: $response — cURL: $curlError");
+// No bloqueamos al usuario si falla n8n; solo registramos el error
+if ($response === false || $curlError || $httpCode < 200 || $httpCode >= 300) {
+    error_log("[N8N] Error enviando género: HTTP $httpCode — RESPUESTA: $response — cURL: $curlError");
 }
 
 // --------------------------------------------
