@@ -1,6 +1,6 @@
 # Multi-stage build for optimized production image
 # IMPORTANTE: Este Dockerfile requiere que el contexto de build sea la RAÍZ del proyecto
-# para poder copiar los archivos estáticos desde beta/vistas, beta/css, etc.
+# para poder copiar los archivos estáticos desde AIContentCreator/views, AIContentCreator/css, etc.
 
 # Stage 1: Build stage
 FROM node:20-alpine AS builder
@@ -8,7 +8,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files
-COPY beta/node/package*.json ./
+COPY AIContentCreator/node/package*.json ./
 
 # Install dependencies
 RUN npm ci --only=production
@@ -26,15 +26,26 @@ RUN addgroup -g 1001 -S nodejs && \
 # Copy dependencies from builder
 COPY --from=builder /app/node_modules ./node_modules
 
-# Copy application files from beta/node
-COPY --chown=nodejs:nodejs beta/node/*.js ./
-COPY --chown=nodejs:nodejs beta/node/.env* ./
+# Copy application files from AIContentCreator/node
+COPY --chown=nodejs:nodejs AIContentCreator/node/*.js ./
+COPY --chown=nodejs:nodejs AIContentCreator/node/.env* ./
 
-# Copy static files from beta/ directory
-COPY --chown=nodejs:nodejs beta/vistas/ ./vistas/
-COPY --chown=nodejs:nodejs beta/css/ ./css/
-COPY --chown=nodejs:nodejs beta/js/ ./js/
-COPY --chown=nodejs:nodejs beta/img/ ./img/
+# Copy static files from AIContentCreator/ directory
+COPY --chown=nodejs:nodejs AIContentCreator/views/ ./views/
+COPY --chown=nodejs:nodejs AIContentCreator/css/ ./css/
+COPY --chown=nodejs:nodejs AIContentCreator/js/ ./js/
+COPY --chown=nodejs:nodejs AIContentCreator/img/ ./img/
+COPY --chown=nodejs:nodejs AIContentCreator/fonts/ ./fonts/
+COPY --chown=nodejs:nodejs AIContentCreator/data/ ./data/
+COPY --chown=nodejs:nodejs AIContentCreator/templates/ ./templates/
+COPY --chown=nodejs:nodejs AIContentCreator/scripts/ ./scripts/
+COPY --chown=nodejs:nodejs AIContentCreator/config/ ./config/
+COPY --chown=nodejs:nodejs AIContentCreator/node/public/ ./public/
+COPY --chown=nodejs:nodejs AIContentCreator/node/models/ ./models/
+COPY --chown=nodejs:nodejs AIContentCreator/node/routes/ ./routes/
+COPY --chown=nodejs:nodejs AIContentCreator/node/controllers/ ./controllers/
+COPY --chown=nodejs:nodejs AIContentCreator/node/middleware/ ./middleware/
+COPY --chown=nodejs:nodejs AIContentCreator/node/utils/ ./utils/
 
 # Switch to non-root user
 USER nodejs
