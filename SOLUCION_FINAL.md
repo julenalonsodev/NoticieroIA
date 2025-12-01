@@ -25,7 +25,7 @@ Configura estas variables:
 
 ```
 PORT=3000
-MONGODB_URI=mongodb+srv://AIContentCreator:Qwerty1234@cluster0.qleqdaa.mongodb.net/AIContentCreator
+MONGODB_URI=mongodb+srv://beta:Qwerty1234@cluster0.qleqdaa.mongodb.net/beta
 NODE_ENV=production
 ```
 

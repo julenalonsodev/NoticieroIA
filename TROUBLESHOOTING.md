@@ -31,13 +31,13 @@ En el panel de EasyPanel, revisa los logs de la aplicación. Deberías ver:
 
 1. **Tipo de aplicación**: Docker
 2. **Contexto de build**: **RAÍZ del proyecto** (donde está el Dockerfile principal)
-   - ❌ NO usar `AIContentCreator/node` como contexto
+   - ❌ NO usar `beta/node` como contexto
    - ✅ Usar la raíz (`.` o el directorio raíz del repo)
 3. **Dockerfile path**: `./Dockerfile` (el de la raíz)
 4. **Puerto**: 3000
 5. **Variables de entorno**:
    ```
-   MONGODB_URI=mongodb+srv://AIContentCreator:Qwerty1234@cluster0.qleqdaa.mongodb.net/AIContentCreator
+   MONGODB_URI=mongodb+srv://beta:Qwerty1234@cluster0.qleqdaa.mongodb.net/beta
    PORT=3000
    NODE_ENV=production
    ```
@@ -46,7 +46,7 @@ En el panel de EasyPanel, revisa los logs de la aplicación. Deberías ver:
 
 ### Solución 1: Verificar contexto de build
 
-Si EasyPanel está configurado con contexto `AIContentCreator/node`:
+Si EasyPanel está configurado con contexto `beta/node`:
 1. Ve a la configuración de la aplicación en EasyPanel
 2. Cambia el **Build Context** o **Root Directory** a la raíz del proyecto (`.`)
 3. Asegúrate de que el **Dockerfile Path** sea `./Dockerfile`
@@ -88,7 +88,7 @@ Después de hacer redeploy, accede a `/debug/files` para ver qué archivos exist
 3. ✅ Agregado endpoint de debug (`/debug/files`)
 4. ✅ Agregados logs de depuración
 5. ✅ Actualizado Dockerfile de la raíz para copiar archivos estáticos
-6. ✅ Actualizado Dockerfile de `AIContentCreator/node/` para funcionar desde contexto raíz
+6. ✅ Actualizado Dockerfile de `beta/node/` para funcionar desde contexto raíz
 
 ## Próximos Pasos
 

@@ -43,7 +43,7 @@ Esta guía te ayudará a desplegar tu aplicación Node.js en EasyPanel usando Do
 En la sección de **Environment Variables**, añade:
 
 ```
-MONGO_URI=mongodb+srv://AIContentCreator:Qwerty1234@cluster0.qleqdaa.mongodb.net
+MONGO_URI=mongodb+srv://beta:Qwerty1234@cluster0.qleqdaa.mongodb.net
 PORT=3000
 NODE_ENV=production
 ```

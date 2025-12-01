@@ -8,7 +8,7 @@ async function conectar() {
     client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
   }
-  return client.db('AIContentCreator'); // nombre exacto de tu base de datos
+  return client.db('beta'); // nombre exacto de tu base de datos
 }
 
 module.exports = { conectar };

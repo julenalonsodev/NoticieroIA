@@ -3,17 +3,17 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copiar package.json e instalar dependencias
-COPY AIContentCreator/node/package*.json ./
+COPY beta/node/package*.json ./
 RUN npm install --production
 
 # Copiar código de la aplicación
-COPY AIContentCreator/node/*.js ./
+COPY beta/node/*.js ./
 
 # Copiar archivos estáticos
-COPY AIContentCreator/vistas/ ./vistas/
-COPY AIContentCreator/css/ ./css/
-COPY AIContentCreator/js/ ./js/
-COPY AIContentCreator/img/ ./img/
+COPY beta/vistas/ ./vistas/
+COPY beta/css/ ./css/
+COPY beta/js/ ./js/
+COPY beta/img/ ./img/
 
 # Exponer puerto
 EXPOSE 3000

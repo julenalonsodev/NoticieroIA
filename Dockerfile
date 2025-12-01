@@ -5,8 +5,8 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files from AIContentCreator/node
-COPY AIContentCreator/node/package*.json ./
+# Copy package files from beta/node
+COPY beta/node/package*.json ./
 
 # Install dependencies
 RUN npm install --production
@@ -24,16 +24,16 @@ RUN addgroup -g 1001 -S nodejs && \
 # Copy dependencies from builder
 COPY --from=builder /app/node_modules ./node_modules
 
-# Copy application files from AIContentCreator/node
-COPY --chown=nodejs:nodejs AIContentCreator/node/*.js ./
-COPY --chown=nodejs:nodejs AIContentCreator/node/.env* ./
+# Copy application files from beta/node
+COPY --chown=nodejs:nodejs beta/node/*.js ./
+COPY --chown=nodejs:nodejs beta/node/.env* ./
 
-# Copy static files (HTML, CSS, JS, images) maintaining AIContentCreator/ structure
+# Copy static files (HTML, CSS, JS, images) maintaining beta/ structure
 # Usar --recursive o copiar directorios completos
-COPY --chown=nodejs:nodejs AIContentCreator/vistas/ ./vistas/
-COPY --chown=nodejs:nodejs AIContentCreator/css/ ./css/
-COPY --chown=nodejs:nodejs AIContentCreator/js/ ./js/
-COPY --chown=nodejs:nodejs AIContentCreator/img/ ./img/
+COPY --chown=nodejs:nodejs beta/vistas/ ./vistas/
+COPY --chown=nodejs:nodejs beta/css/ ./css/
+COPY --chown=nodejs:nodejs beta/js/ ./js/
+COPY --chown=nodejs:nodejs beta/img/ ./img/
 
 
 # Verificar que los archivos se copiaron (debug) - ANTES de cambiar de usuario

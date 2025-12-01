@@ -18,7 +18,7 @@ Al acceder a `https://digital-digital-noticieroia.owolqd.easypanel.host`, se mue
 - **Rama**: `main`
 - **Contexto de Build** o **Root Directory**: 
   - ✅ **DEBE SER LA RAÍZ** (`.`) o vacío
-  - ❌ **NO usar** `AIContentCreator/node`
+  - ❌ **NO usar** `beta/node`
 - **Dockerfile Path**: `./Dockerfile` (el de la raíz)
 
 ### Paso 3: Configuración del Puerto
@@ -29,7 +29,7 @@ Al acceder a `https://digital-digital-noticieroia.owolqd.easypanel.host`, se mue
 Asegúrate de que estas variables estén configuradas:
 
 ```
-MONGODB_URI=mongodb+srv://AIContentCreator:Qwerty1234@cluster0.qleqdaa.mongodb.net/AIContentCreator
+MONGODB_URI=mongodb+srv://beta:Qwerty1234@cluster0.qleqdaa.mongodb.net/beta
 PORT=3000
 NODE_ENV=production
 ```
@@ -62,9 +62,9 @@ Después de corregir la configuración, prueba estos endpoints:
 
 ## ⚠️ Problema Común: Contexto de Build Incorrecto
 
-Si el **Build Context** está configurado como `AIContentCreator/node`:
+Si el **Build Context** está configurado como `beta/node`:
 
-1. El Dockerfile no podrá copiar los archivos desde `AIContentCreator/vistas`, `AIContentCreator/css`, etc.
+1. El Dockerfile no podrá copiar los archivos desde `beta/vistas`, `beta/css`, etc.
 2. El contenedor no tendrá los archivos estáticos necesarios
 3. El servidor puede iniciar pero no servirá las páginas HTML
 

@@ -15,7 +15,7 @@ NoticieroIA es una aplicación web para gestionar géneros de contenido, noticia
 NoticieroIA/
 ├── Dockerfile                    # Dockerfile principal en la raíz
 ├── docker-compose.yml            # Docker Compose para desarrollo local
-├── AIContentCreator/             # Aplicación PHP (legacy, no usada en Docker)
+├── beta/             # Aplicación PHP (legacy, no usada en Docker)
 ├── beta/
 │   ├── node/                     # Backend Node.js
 │   │   ├── server.js             # Servidor Express principal
@@ -77,7 +77,7 @@ El servidor Express está configurado para:
 
 ### MongoDB Atlas
 
-- **Base de datos**: `AIContentCreator`
+- **Base de datos**: `beta`
 - **Colección principal**: `planificacioncontenido`
 - **URI de conexión**: Variable de entorno `MONGODB_URI` o `MONGO_URI`
 
@@ -129,7 +129,7 @@ https://digital-digital-noticieroia.owolqd.easypanel.host
 3. **Puerto**: 3000
 4. **Variables de entorno requeridas**:
    ```
-   MONGODB_URI=mongodb+srv://AIContentCreator:Qwerty1234@cluster0.qleqdaa.mongodb.net/AIContentCreator
+   MONGODB_URI=mongodb+srv://beta:Qwerty1234@cluster0.qleqdaa.mongodb.net/beta
    PORT=3000
    NODE_ENV=production
    ```
@@ -195,7 +195,7 @@ Ver `beta/node/package.json`:
 ### Error de conexión a MongoDB
 - Verificar variable de entorno `MONGODB_URI` o `MONGO_URI`
 - Verificar que MongoDB Atlas permita conexiones desde la IP del servidor
-- Verificar nombre de la base de datos: debe ser `AIContentCreator`
+- Verificar nombre de la base de datos: debe ser `beta`
 
 ### Health check falla
 - Verificar que el endpoint `/health` responda correctamente

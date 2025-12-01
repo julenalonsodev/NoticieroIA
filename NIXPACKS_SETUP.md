@@ -20,7 +20,7 @@
 
 1. **Repositorio Git**: `https://github.com/julenalonsodev/NoticieroIA.git`
 2. **Rama**: `main`
-3. **Root Directory**: `AIContentCreator/node` (importante: el directorio donde está server.js y package.json)
+3. **Root Directory**: `beta/node` (importante: el directorio donde está server.js y package.json)
 
 ### Paso 3: Variables de Entorno
 
@@ -28,7 +28,7 @@ En la sección de **Environment Variables**, configura:
 
 ```
 PORT=3000
-MONGODB_URI=mongodb+srv://AIContentCreator:Qwerty1234@cluster0.qleqdaa.mongodb.net/AIContentCreator
+MONGODB_URI=mongodb+srv://beta:Qwerty1234@cluster0.qleqdaa.mongodb.net/beta
 NODE_ENV=production
 ```
 
@@ -50,16 +50,16 @@ NODE_ENV=production
 He creado dos archivos de configuración de Nixpacks:
 
 1. **`nixpacks.toml`** (en la raíz) - Para usar la raíz como contexto
-2. **`AIContentCreator/node/nixpacks.toml`** (recomendado) - Para usar AIContentCreator/node como contexto
+2. **`beta/node/nixpacks.toml`** (recomendado) - Para usar beta/node como contexto
 
 ## ✅ Configuración Recomendada
 
-### Opción 1: Usar AIContentCreator/node como Root Directory (RECOMENDADO)
+### Opción 1: Usar beta/node como Root Directory (RECOMENDADO)
 
-- **Root Directory**: `AIContentCreator/node`
+- **Root Directory**: `beta/node`
 - **Build Method**: Nixpacks
 - Nixpacks detectará automáticamente Node.js
-- El archivo `AIContentCreator/node/nixpacks.toml` copiará los archivos estáticos
+- El archivo `beta/node/nixpacks.toml` copiará los archivos estáticos
 
 ### Opción 2: Usar la raíz como Root Directory
 
@@ -72,14 +72,14 @@ He creado dos archivos de configuración de Nixpacks:
 Si después del deploy los archivos estáticos (HTML, CSS, JS) no están disponibles, puedes:
 
 1. Verificar en los logs si hay errores al copiar archivos
-2. El archivo `AIContentCreator/node/nixpacks.toml` tiene comandos para copiar los archivos desde el directorio padre
+2. El archivo `beta/node/nixpacks.toml` tiene comandos para copiar los archivos desde el directorio padre
 
 ## 📝 Estructura Esperada con Nixpacks
 
-Con Root Directory = `AIContentCreator/node`, Nixpacks esperará:
-- `package.json` en `AIContentCreator/node/`
-- `server.js` en `AIContentCreator/node/`
-- Los archivos estáticos se copiarán durante el build desde `AIContentCreator/vistas`, `AIContentCreator/css`, etc.
+Con Root Directory = `beta/node`, Nixpacks esperará:
+- `package.json` en `beta/node/`
+- `server.js` en `beta/node/`
+- Los archivos estáticos se copiarán durante el build desde `beta/vistas`, `beta/css`, etc.
 
 ## ✅ Verificación
 
@@ -94,7 +94,7 @@ Después del deploy con Nixpacks:
 
 ### Si Nixpacks no detecta Node.js:
 - Verifica que `package.json` esté en el Root Directory
-- Verifica que el Root Directory sea `AIContentCreator/node`
+- Verifica que el Root Directory sea `beta/node`
 
 ### Si los archivos estáticos no están:
 - Revisa los logs del build
