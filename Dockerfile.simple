@@ -9,7 +9,7 @@ RUN npm install --production
 # Copiar código de la aplicación
 COPY beta/node/*.js ./
 
-# Copiar archivos estáticos
+# Copiar archivos estáticos desde beta/
 COPY beta/vistas/ ./vistas/
 COPY beta/css/ ./css/
 COPY beta/js/ ./js/

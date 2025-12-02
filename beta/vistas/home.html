@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Home - AI Content Creator</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+    <header>AI CONTENT CREATOR</header>
+    <div class="layout">
+        <main>
+            <h1 class="page-title">Géneros</h1>
+            <p class="page-sub">Selecciona una categoría para continuar</p>
+            <div id="generos-container">
+                <p>Cargando géneros...</p>
+            </div>
+        </main>
+    </div>
+    <footer>
+        © 2025 AI Content Creator - Todos los derechos reservados
+    </footer>
+    <button id="fabAdd" class="fab" aria-label="Añadir Género" title="Añadir Género">+</button>
+    <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="modal-title">Nuevo Género</h3>
+                <button class="btn ghost" id="btnClose" type="button">✕</button>
+            </div>
+            <form id="genreForm" method="POST" action="/api/generos">
+                <div class="modal-body">
+                    <div>
+                        <label for="tema">Tema</label>
+                        <input type="text" id="tema" name="tema" required>
+                    </div>
+                    <div>
+                        <label for="descripcion">Descripción</label>
+                        <input type="text" id="descripcion" name="descripcion" required>
+                    </div>
+                    <div>
+                        <label for="frecuencia">Frecuencia</label>
+                        <select id="frecuencia" name="frecuencia" required>
+                            <option value="" disabled selected>Selecciona…</option>
+                            <option value="Diario">Diario</option>
+                            <option value="Semanal">Semanal</option>
+                            <option value="Mensual">Mensual</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="cantidad">Cantidad</label>
+                        <input type="number" id="cantidad" name="cantidad" min="1" required>
+                    </div>
+                    <div>
+                        <label for="idioma">Idioma</label>
+                        <select id="idioma" name="idioma" required>
+                            <option value="" disabled selected>Selecciona…</option>
+                            <option value="es">Español</option>
+                            <option value="en">Inglés</option>
+                            <option value="fr">Francés</option>
+                        </select>
+                    </div>
+                    <div id="sourcesSection" class="sources-section">
+                        <label>Fuentes</label>
+                        <div id="sourcesList"></div>
+                        <button type="button" class="btn add-source" id="btnAddSource">+ Añadir fuente</button>
+                    </div>
+                    <input type="hidden" id="fuentes" name="fuentes">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn ghost" id="btnCancel">Cancelar</button>
+                    <button type="submit" class="btn primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/js/home.js"></script>
+    <script src="/js/generos.js"></script>
+</body>
+</html>
+

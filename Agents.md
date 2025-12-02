@@ -109,6 +109,19 @@ El Dockerfile usa multi-stage build:
 - Health check: `GET /health` cada 30 segundos
 - Comando: `node server.js`
 
+### Dockerfile.simple (para EasyPanel)
+
+Dockerfile simplificado usado en EasyPanel:
+- Copia `beta/node/package*.json` e instala dependencias
+- Copia `beta/node/*.js` (código de la aplicación)
+- Copia archivos estáticos desde `beta/vistas/`, `beta/css/`, `beta/js/`, `beta/img/`
+
+**IMPORTANTE**: Los archivos estáticos deben estar en `beta/` antes del build:
+- `beta/vistas/` - Archivos HTML (login.html, home.html, articulos.html)
+- `beta/css/` - Archivos CSS (copiados desde `styles/`)
+- `beta/js/` - Archivos JavaScript (copiados desde `code/`)
+- `beta/img/` - Imágenes (copiadas desde `img/`)
+
 ### Docker Compose (desarrollo local)
 
 Incluye dos servicios:
@@ -187,6 +200,36 @@ Ver `beta/node/package.json`:
 
 ## 🔍 Troubleshooting
 
+### Error: "/beta/img": not found en Docker build
+
+**Error**: 
+```
+ERROR: failed to build: failed to solve: failed to compute cache key: 
+failed to calculate checksum of ref ... "/beta/img": not found
+```
+
+**Causa**: El `Dockerfile.simple` intenta copiar directorios desde `beta/vistas/`, `beta/css/`, `beta/js/`, `beta/img/` que no existen.
+
+**Solución aplicada**:
+1. ✅ Crear los directorios necesarios en `beta/`:
+   - `beta/vistas/` - Archivos HTML
+   - `beta/css/` - Archivos CSS (copiados desde `styles/`)
+   - `beta/js/` - Archivos JavaScript (copiados desde `code/`)
+   - `beta/img/` - Imágenes (copiadas desde `img/`)
+2. ✅ Crear archivos HTML básicos en `beta/vistas/`:
+   - `login.html`
+   - `home.html`
+   - `articulos.html`
+3. ✅ Copiar archivos estáticos desde la raíz a `beta/`:
+   ```bash
+   mkdir -p beta/vistas beta/css beta/js beta/img
+   cp -r styles/* beta/css/
+   cp -r code/* beta/js/
+   cp -r img/* beta/img/
+   ```
+
+**Prevención**: Asegurarse de que todos los directorios en `beta/` existan antes de hacer el build en EasyPanel.
+
 ### La aplicación no muestra páginas HTML
 - ✅ **RESUELTO**: Ver cambios recientes arriba
 - Verificar que los archivos estáticos estén siendo copiados en el Dockerfile
@@ -240,5 +283,5 @@ docker run -p 3000:3000 -e MONGODB_URI="..." noticieroia
 
 ---
 
-**Última actualización**: Fix despliegue EasyPanel - La aplicación ahora sirve correctamente las páginas HTML además de la API.
+**Última actualización**: 2025-12-02 - Fix error Docker build: Creados directorios faltantes en `beta/` (vistas, css, js, img) y corregido `Dockerfile.simple` para copiar archivos estáticos correctamente.
 
