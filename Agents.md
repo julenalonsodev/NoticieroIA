@@ -208,7 +208,9 @@ ERROR: failed to build: failed to solve: failed to compute cache key:
 failed to calculate checksum of ref ... "/beta/img": not found
 ```
 
-**Causa**: El `Dockerfile.simple` intenta copiar directorios desde `beta/vistas/`, `beta/css/`, `beta/js/`, `beta/img/` que no existen.
+**Causa**: Dos problemas principales:
+1. El `Dockerfile.simple` intenta copiar directorios desde `beta/vistas/`, `beta/css/`, `beta/js/`, `beta/img/` que no existían.
+2. El `.dockerignore` tenía `beta/` que excluía TODO el directorio beta/, impidiendo que Docker copiara los archivos.
 
 **Solución aplicada**:
 1. ✅ Crear los directorios necesarios en `beta/`:
@@ -227,8 +229,14 @@ failed to calculate checksum of ref ... "/beta/img": not found
    cp -r code/* beta/js/
    cp -r img/* beta/img/
    ```
+4. ✅ **CRÍTICO**: Corregir `.dockerignore`:
+   - Removida la línea `beta/` que excluía todo el directorio
+   - Ahora solo se excluye `beta/AIContentCreator/` (aplicación PHP legacy)
+   - Se incluyen: `beta/node/`, `beta/vistas/`, `beta/css/`, `beta/js/`, `beta/img/`
 
-**Prevención**: Asegurarse de que todos los directorios en `beta/` existan antes de hacer el build en EasyPanel.
+**Prevención**: 
+- Asegurarse de que todos los directorios en `beta/` existan antes de hacer el build
+- Verificar que `.dockerignore` NO excluya los directorios necesarios en `beta/`
 
 ### La aplicación no muestra páginas HTML
 - ✅ **RESUELTO**: Ver cambios recientes arriba
