@@ -20,16 +20,16 @@ RUN npm install --production
 # Copiar código de la aplicación desde build-files/node
 COPY build-files/node/*.js ./
 
-# Crear directorios para archivos estáticos
-RUN mkdir -p vistas css js img
-
-# Copiar archivos estáticos desde build-files/ (si existen)
-# Nota: Si estos directorios no existen en build-files/, el COPY fallará
-# Ejecuta prepare-build.sh primero para copiar los archivos necesarios
+# Copiar archivos estáticos desde build-files/
+# Los directorios ahora tienen .gitkeep así que no están completamente vacíos
+# Copiar el contenido de cada directorio (incluyendo .gitkeep si existe)
 COPY build-files/vistas/ ./vistas/
 COPY build-files/css/ ./css/
 COPY build-files/js/ ./js/
 COPY build-files/img/ ./img/
+
+# Limpiar archivos .gitkeep si existen (no son necesarios en el contenedor)
+RUN find ./vistas ./css ./js ./img -name ".gitkeep" -delete 2>/dev/null || true
 
 EXPOSE 3000
 
