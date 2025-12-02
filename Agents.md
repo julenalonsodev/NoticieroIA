@@ -125,14 +125,32 @@ https://digital-digital-noticieroia.owolqd.easypanel.host
 ### Configuración en EasyPanel
 
 1. **Tipo de aplicación**: Docker
-2. **Directorio de build**: Raíz del proyecto (contiene el Dockerfile)
-3. **Puerto**: 3000
-4. **Variables de entorno requeridas**:
+2. **Root Directory** o **Build Context**: **RAÍZ del proyecto** (`.` o vacío)
+   - ⚠️ **NO usar** `/AIContentCreator` como contexto
+   - ✅ **DEBE ser la raíz** donde están `Dockerfile` y `Dockerfile.simple`
+3. **Dockerfile Path**: `Dockerfile.simple` o `Dockerfile`
+4. **Puerto**: 3000
+5. **Variables de entorno requeridas**:
    ```
    MONGODB_URI=mongodb+srv://beta:Qwerty1234@cluster0.qleqdaa.mongodb.net/beta
    PORT=3000
    NODE_ENV=production
    ```
+
+### ⚠️ Error Común: Contexto de Build Incorrecto
+
+**Error**: `ERROR: failed to build: failed to solve: failed to read dockerfile: open Dockerfile.simple: no such file or directory`
+
+**Causa**: EasyPanel está configurado con `Root Directory: /AIContentCreator`, pero:
+- El `Dockerfile.simple` está en la raíz del proyecto
+- Docker no puede acceder a archivos fuera del contexto de build (`../beta/node/`)
+
+**Solución**:
+1. Ir a la configuración de la aplicación en EasyPanel
+2. Cambiar **Root Directory** de `/AIContentCreator` a `.` (raíz) o dejarlo vacío
+3. Guardar y redesplegar
+
+Ver `AIContentCreator/README_EASYPANEL.md` para más detalles.
 
 ### Problema Resuelto
 
