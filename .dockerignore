@@ -30,5 +30,12 @@ Thumbs.db
 .vscode
 .idea
 
-# Exclude PHP application
-beta/
+# Exclude PHP application (but keep Node.js app and static files)
+# IMPORTANT: Do NOT exclude beta/ entirely - we need:
+# - beta/node/ (Node.js application)
+# - beta/vistas/ (HTML files)
+# - beta/css/ (CSS files)
+# - beta/js/ (JavaScript files)
+# - beta/img/ (Images)
+# Only exclude specific subdirectories we don't need:
+beta/AIContentCreator/
