@@ -39,7 +39,7 @@ app.get('/login', (req, res) => {
   res.sendFile(filePath, (err) => {
     if (err) {
       console.error('Error serving login.html:', err);
-      res.status(500).send('Error loading page');
+      res.status(500).send('Error loading page A');
     }
   });
 });
