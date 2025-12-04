@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Noticias por género - AI Content Creator</title>
+
+    <!-- Estilos generales + específicos de noticias -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>styles/home.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>styles/noticias.css">
+</head>
+
+<body>
+
+<header>AI CONTENT CREATOR - Noticias por género</header>
+
+<?php
+// Normalizamos datos mínimos por si faltan claves
+$temaGenero = isset($genero['tema'])
+    ? $genero['tema']
+    : ('Género ' . (int)($idGenero ?? 0));
+
+$descGenero = isset($genero['descripcion'])
+    ? $genero['descripcion']
+    : 'Artículos generados para este género.';
+
+$idGeneroSafe = (int)($idGenero ?? 0);
+?>
+
+<div class="news-header-bar">
+    <h1 class="page-title">
+        Noticias del género: "<?= htmlspecialchars($temaGenero, ENT_QUOTES, 'UTF-8') ?>"
+    </h1>
+
+    <a href="<?= BASE_URL ?>index.php?controller=home" class="btn btn-back">
+        ← Volver al Home
+    </a>
+</div>
+
+<p class="page-sub">
+    Descripción del género: <?= htmlspecialchars($descGenero, ENT_QUOTES, 'UTF-8') ?>
+</p>
+
+<?php if (!empty($noticias) && is_array($noticias)): ?>
+
+    <table class="news-table">
+        <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Imagen</th>
+            <th>Estados</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <?php foreach ($noticias as $row): ?>
+
+            <?php
+            // --------------------------
+            // NORMALIZACIÓN DE DATOS
+            // --------------------------
+            $rowId       = isset($row['id']) ? (int)$row['id'] : 0;
+            $rowIdGenero = isset($row['id_genero'])
+                ? (int)$row['id_genero']
+                : $idGeneroSafe;
+
+            // Usamos fecha_publicacion de la BBDD
+            $fechaPub = $row['fecha_publicacion'] ?? null;
+
+            $notRev = $row['noticia_revisada'] ?? null;
+            $imgRev = $row['imagen_revisada']  ?? null;
+            $pubVal = $row['publicado']        ?? null;
+
+            $titulo      = $row['titulo']      ?? '';
+            $descripcion = $row['descripcion'] ?? '';
+            $imagen      = $row['imagen']      ?? '';
+            ?>
+
+            <tr>
+
+                <!-- TÍTULO -->
+                <td style="max-width: 350px; white-space: normal;">
+                    <strong><?= nl2br(htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8')) ?></strong><br>
+                    <small>
+                        <?php if (!empty($fechaPub)): ?>
+                            <?= date("d/m/Y H:i", strtotime($fechaPub)) ?>
+                        <?php else: ?>
+                            No publicada
+                        <?php endif; ?>
+                    </small>
+                </td>
+
+                <!-- DESCRIPCIÓN -->
+                <td class="td-descripcion">
+                    <div class="descripcion-scroll">
+                        <?= nl2br(htmlspecialchars($descripcion, ENT_QUOTES, 'UTF-8')) ?>
+                    </div>
+                </td>
+
+                <!-- IMAGEN -->
+                <td class="td-imagen">
+                    <?php if (!empty($imagen)): ?>
+                        <img src="<?= htmlspecialchars($imagen, ENT_QUOTES, 'UTF-8') ?>"
+                             alt="Imagen noticia"
+                             class="img-ajustada">
+                    <?php else: ?>
+                        <em>Sin imagen</em>
+                    <?php endif; ?>
+                </td>
+
+                <!-- ESTADOS (FORM POR NOTICIA) -->
+                <td>
+                    <form method="POST" action="<?= BASE_URL ?>controllers/guardar_noticia.php">
+
+                        <!-- Hidden IDs necesarios para el actualizador -->
+                        <input type="hidden" name="id" value="<?= (int)$rowId ?>">
+                        <input type="hidden" name="id_genero" value="<?= (int)$rowIdGenero ?>">
+
+                        <!-- NOTICIA -->
+                        <div class="field-group">
+                            <label>Noticia</label>
+                            <select name="noticia_revisada" class="select-status">
+                                <option value="" <?= ($notRev === null || $notRev === '') ? 'selected' : '' ?>></option>
+                                <option value="pendiente" <?= ($notRev === 'pendiente') ? 'selected' : '' ?>>Pendiente</option>
+                                <option value="revisada"  <?= ($notRev === 'revisada')  ? 'selected' : '' ?>>Revisada</option>
+                            </select>
+                        </div>
+
+                        <!-- IMAGEN -->
+                        <div class="field-group">
+                            <label>Imagen</label>
+                            <select name="imagen_revisada" class="select-status">
+                                <option value="" <?= ($imgRev === null || $imgRev === '') ? 'selected' : '' ?>></option>
+                                <option value="reemplazar imagen" <?= ($imgRev === 'reemplazar imagen') ? 'selected' : '' ?>>Reemplazar imagen</option>
+                                <option value="aprobada"  <?= ($imgRev === 'aprobada')  ? 'selected' : '' ?>>Aprobada</option>
+                            </select>
+                        </div>
+
+                        <!-- PUBLICACIÓN -->
+                        <div class="field-group">
+                            <label>Publicación</label>
+                            <select name="publicado" class="select-status">
+                                <option value="" <?= ($pubVal === null || $pubVal === '') ? 'selected' : '' ?>></option>
+                                <option value="borrador"   <?= ($pubVal === 'borrador')   ? 'selected' : '' ?>>Borrador</option>
+                                <option value="publicado"  <?= ($pubVal === 'publicado')  ? 'selected' : '' ?>>Publicado</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group" style="margin-top: 8px;">
+                            <button type="submit" class="btn btn-primary">
+                                💾 Guardar cambios
+                            </button>
+                        </div>
+
+                    </form>
+                </td>
+
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+<?php else: ?>
+
+    <p>No hay noticias creadas todavía para este género.</p>
+
+<?php endif; ?>
+
+</body>
+</html>

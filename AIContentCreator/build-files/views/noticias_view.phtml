@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Noticias - AI Content Creator</title>
+
+    <!-- Estilos generales + específicos de noticias -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>styles/home.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>styles/noticias.css">
+</head>
+
+<body>
+
+    <!-- CABECERA + BARRA SUPERIOR -->
+    <header>AI CONTENT CREATOR - Noticias</header>
+    <div class="news-header-bar">
+        <h1 class="page-title">
+            Noticias
+            <?php if (!empty($__generoTema)): ?>
+                <small style="font-size: 0.7em; font-weight: normal;">
+                    (Género: <?= htmlspecialchars($__generoTema, ENT_QUOTES, 'UTF-8') ?>)
+                </small>
+            <?php endif; ?>
+        </h1>
+
+        <a href="<?= BASE_URL ?>index.php?controller=home" class="btn btn-back">
+            ← Volver al Home
+        </a>
+    </div>
+
+    <?php if (!empty($__idGenero)): ?>
+        <p class="page-sub">
+            Listado de noticias generadas para el género
+            <strong><?= htmlspecialchars($__generoTema ?? ('ID ' . $__idGenero), ENT_QUOTES, 'UTF-8') ?></strong>.
+        </p>
+    <?php else: ?>
+        <p class="page-sub">Listado de noticias generadas en la plataforma</p>
+    <?php endif; ?>
+
+    <main>
+        <?php if (!empty($noticias) && is_array($noticias)): ?>
+            <table class="news-table">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Imagen</th>
+                        <th>Estados / Guardar</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php foreach ($noticias as $row): ?>
+                        <?php
+                            $notRev = $row['noticia_revisada'] ?? null;   // 'pendiente' / 'revisada' / null
+                            $imgRev = $row['imagen_revisada'] ?? null;    // 'reemplazar imagen' / 'aprobada' / null
+                            $pubVal = $row['publicado'] ?? null;          // 'borrador' / 'publicado' / null
+
+                            $titulo      = $row['titulo']      ?? '';
+                            $descripcion = $row['descripcion'] ?? '';
+                            $imagen      = $row['imagen']      ?? '';
+                            $idNoticia   = (int)($row['id'] ?? 0);
+                        ?>
+                        <tr>
+
+                            <!-- TÍTULO COMPLETO -->
+                            <td style="max-width: 350px; white-space: normal;">
+                                <strong><?= nl2br(htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8')) ?></strong><br>
+                                <small>
+                                    <?php if (!empty($row['fecha_publicacion'])): ?>
+                                        <?= date("d/m/Y H:i", strtotime($row['fecha_publicacion'])) ?>
+                                    <?php else: ?>
+                                        No publicada
+                                    <?php endif; ?>
+                                </small>
+                            </td>
+
+                            <!-- DESCRIPCIÓN COMPLETA CON SCROLL -->
+                            <td class="td-descripcion">
+                                <div class="descripcion-scroll">
+                                    <?= nl2br(htmlspecialchars($descripcion, ENT_QUOTES, 'UTF-8')) ?>
+                                </div>
+                            </td>
+
+                            <!-- IMAGEN AJUSTADA A LA ALTURA DE LA FILA -->
+                            <td class="td-imagen">
+                                <?php if (!empty($imagen)): ?>
+                                    <img src="<?= htmlspecialchars($imagen, ENT_QUOTES, 'UTF-8') ?>"
+                                         alt="Imagen noticia"
+                                         class="img-ajustada">
+                                <?php else: ?>
+                                    <em>Sin imagen</em>
+                                <?php endif; ?>
+                            </td>
+
+                            <!-- ESTADOS + GUARDAR -->
+                            <td>
+                                <form method="POST"
+                                      action="<?= BASE_URL ?>controllers/guardar_noticia.php"
+                                      class="news-form">
+                                    <input type="hidden" name="id" value="<?= $idNoticia ?>">
+
+                                    <?php if (!empty($__idGenero)): ?>
+                                        <input type="hidden" name="id_genero" value="<?= (int)$__idGenero ?>">
+                                    <?php endif; ?>
+
+                                    <!-- NOTICIA -->
+                                    <div class="field-group">
+                                        <label>Noticia</label>
+                                        <select name="noticia_revisada" class="select-status">
+                                            <option value="" <?= ($notRev === null || $notRev === '') ? 'selected' : '' ?>></option>
+                                            <option value="pendiente" <?= ($notRev === 'pendiente') ? 'selected' : '' ?>>
+                                                Pendiente
+                                            </option>
+                                            <option value="revisada" <?= ($notRev === 'revisada') ? 'selected' : '' ?>>
+                                            Revisada
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- IMAGEN -->
+                                    <div class="field-group">
+                                        <label>Imagen</label>
+                                        <select name="imagen_revisada" class="select-status">
+                                            <option value="" <?= ($imgRev === null || $imgRev === '') ? 'selected' : '' ?>></option>
+                                            <option value="reemplazar imagen" <?= ($imgRev === 'reemplazar imagen') ? 'selected' : '' ?>>
+                                                Reemplazar imagen
+                                            </option>
+                                            <option value="aprobada" <?= ($imgRev === 'aprobada') ? 'selected' : '' ?>>
+                                                Aprobada
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- PUBLICACIÓN -->
+                                    <div class="field-group">
+                                        <label>Publicación</label>
+                                        <select name="publicado" class="select-status">
+                                            <option value="" <?= ($pubVal === null || $pubVal === '') ? 'selected' : '' ?>></option>
+                                            <option value="borrador" <?= ($pubVal === 'borrador') ? 'selected' : '' ?>>
+                                                Borrador
+                                            </option>
+                                            <option value="publicado" <?= ($pubVal === 'publicado') ? 'selected' : '' ?>>
+                                                Publicado
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit"
+                                            class="btn primary btn-sm"
+                                            style="margin-top:8px; margin-bottom: 8px;">
+                                        Guardar
+                                    </button>
+                                </form>
+                            </td>
+
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+        <?php else: ?>
+            <p>No hay noticias creadas todavía.</p>
+        <?php endif; ?>
+    </main>
+
+</body>
+
+</html>

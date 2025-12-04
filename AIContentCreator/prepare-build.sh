@@ -1,72 +1,43 @@
 #!/bin/sh
-# Script para preparar los archivos necesarios para el build de Docker
-# cuando el contexto de build es AIContentCreator
-#
-# Ahora copia los archivos desde las carpetas locales de AIContentCreator
-# (node de beta, views, styles, code, img) a build-files/
+# Script para copiar todas las carpetas del proyecto dentro de build-files
 
 set -e
 
-echo "📦 Preparando archivos para build de Docker desde AIContentCreator..."
+echo "📦 Preparando archivos para build de Docker..."
 
-# Limpia y crea directorios necesarios en AIContentCreator
+# Carpetas que deben copiarse (según tu captura)
+DIRS="api code controllers db img models styles views"
+
+# Archivos individuales a copiar (si los quieres)
+FILES="index .env"
+
+# Eliminar build anterior
 rm -rf build-files
-mkdir -p build-files/node build-files/vistas build-files/css build-files/js build-files/img
+mkdir -p build-files
 
-#########################
-# 1) Backend Node (de beta, de momento)
-#########################
-if [ -d "../beta/node" ]; then
-  echo "✅ Copiando archivos de Node.js desde ../beta/node..."
-  cp -r ../beta/node/* build-files/node/ 2>/dev/null || echo "⚠️  Error copiando archivos de Node.js"
-else
-  echo "❌ Error: Directorio ../beta/node no encontrado"
-  exit 1
-fi
+#########################################
+# Copiar todas las carpetas del proyecto
+#########################################
+for dir in $DIRS; do
+  if [ -d "$dir" ]; then
+    echo "📁 Copiando carpeta: $dir"
+    mkdir -p build-files/"$dir"
+    cp -r "$dir"/* build-files/"$dir"/ 2>/dev/null || true
+  else
+    echo "⚠️ Carpeta no encontrada: $dir"
+  fi
+done
 
-#########################
-# 2) Vistas (desde AIContentCreator/views -> build-files/vistas/*.html)
-#########################
-if [ -d "./views" ]; then
-  echo "✅ Generando vistas HTML desde ./views..."
-  for view in ./views/*_view.phtml; do
-    [ -f "$view" ] || continue
-    base="$(basename "$view")"
-    name="${base%_view.phtml}"       # ej: home_view.phtml -> home
-    cp "$view" "build-files/vistas/${name}.html"
-  done
-else
-  echo "⚠️  Directorio ./views no encontrado; no se generan vistas"
-fi
+#########################################
+# Copiar archivos sueltos del root
+#########################################
+for file in $FILES; do
+  if [ -f "$file" ]; then
+    echo "📄 Copiando archivo: $file"
+    cp "$file" build-files/
+  else
+    echo "⚠️ Archivo no encontrado: $file"
+  fi
+done
 
-#########################
-# 3) CSS (desde AIContentCreator/styles)
-#########################
-if [ -d "./styles" ]; then
-  echo "✅ Copiando CSS desde ./styles..."
-  cp -r ./styles/* build-files/css/ 2>/dev/null || echo "⚠️  CSS no encontrado en ./styles"
-else
-  echo "⚠️  Directorio ./styles no encontrado; no se copiará CSS"
-fi
-
-#########################
-# 4) JS (desde AIContentCreator/code)
-#########################
-if [ -d "./code" ]; then
-  echo "✅ Copiando JS desde ./code..."
-  cp -r ./code/* build-files/js/ 2>/dev/null || echo "⚠️  JS no encontrado en ./code"
-else
-  echo "⚠️  Directorio ./code no encontrado; no se copiará JS"
-fi
-
-#########################
-# 5) Imágenes (desde AIContentCreator/img)
-#########################
-if [ -d "./img" ]; then
-  echo "✅ Copiando imágenes desde ./img..."
-  cp -r ./img/* build-files/img/ 2>/dev/null || echo "⚠️  Imágenes no encontradas en ./img"
-else
-  echo "⚠️  Directorio ./img no encontrado; no se copiarán imágenes"
-fi
-
-echo "✅ Preparación completada usando AIContentCreator"
+echo "✅ Todos los archivos han sido copiados a build-files/"

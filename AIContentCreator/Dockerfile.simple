@@ -23,10 +23,14 @@ COPY build-files/node/*.js ./
 # Copiar archivos estáticos desde build-files/
 # Los directorios ahora tienen .gitkeep así que no están completamente vacíos
 # Copiar el contenido de cada directorio (incluyendo .gitkeep si existe)
-COPY build-files/vistas/ ./vistas/
-COPY build-files/css/ ./css/
-COPY build-files/js/ ./js/
+COPY build-files/api/ ./api/
+COPY build-files/code/ ./code/
+COPY build-files/controllers/ ./controllers/
+COPY build-files/db/ ./db/
 COPY build-files/img/ ./img/
+COPY build-files/models/ ./models/
+COPY build-files/styles/ ./styles/
+COPY build-files/views/ ./views/
 
 # Limpiar archivos .gitkeep si existen (no son necesarios en el contenedor)
 RUN find ./vistas ./css ./js ./img -name ".gitkeep" -delete 2>/dev/null || true
