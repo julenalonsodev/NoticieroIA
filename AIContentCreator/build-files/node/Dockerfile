@@ -8,7 +8,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files
-COPY ./beta/node/package*.json ./
+COPY ./package*.json ./
 
 # Install dependencies
 RUN npm ci --only=production
@@ -27,15 +27,18 @@ RUN addgroup -g 1001 -S nodejs && \
 COPY --from=builder /app/node_modules ./node_modules
 
 # Copy application files from beta/node
-COPY --chown=nodejs:nodejs ./beta/node/*.js ./
-COPY --chown=nodejs:nodejs ./beta/node/.env* ./
+COPY --chown=nodejs:nodejs ./*.js ./
+COPY --chown=nodejs:nodejs ./.env* ./
 
 # Copy static files from beta/ directory
-COPY --chown=nodejs:nodejs ./beta/views/ ./views/
-COPY --chown=nodejs:nodejs ./beta/css/ ./css/
-COPY --chown=nodejs:nodejs ./beta/js/ ./js/
-COPY --chown=nodejs:nodejs ./beta/img/ ./img/
-
+COPY --chown=nodejs:nodejs ./api/ ./api/
+COPY --chown=nodejs:nodejs ./code/ ./code/
+COPY --chown=nodejs:nodejs ./controllers/ ./controllers/
+COPY --chown=nodejs:nodejs ./db/ ./db/
+COPY --chown=nodejs:nodejs ./img/ ./img/
+COPY --chown=nodejs:nodejs ./models/ ./models/
+COPY --chown=nodejs:nodejs ./styles/ ./styles/
+COPY --chown=nodejs:nodejs ./views/ ./views/
 
 # Switch to non-root user
 USER nodejs
