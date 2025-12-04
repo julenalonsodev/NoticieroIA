@@ -30,11 +30,14 @@ COPY --chown=nodejs:nodejs AIContentCreator/build-files/node/.env* ./
 
 # Copy static files (HTML, CSS, JS, images) maintaining beta/ structure
 # Usar --recursive o copiar directorios completos
-COPY AIContentCreator/build-files/vistas/ ./vistas/
-COPY AIContentCreator/build-files/css/    ./css/
-COPY AIContentCreator/build-files/js/     ./js/
-COPY AIContentCreator/build-files/img/    ./img/
-
+COPY AIContentCreator/build-files/api/ ./api/
+COPY AIContentCreator/build-files/code/    ./code/
+COPY AIContentCreator/build-files/controllers/     ./controllers/
+COPY AIContentCreator/build-files/db/    ./db/
+COPY AIContentCreator/build-files/img/ ./img/
+COPY AIContentCreator/build-files/models/    ./models/
+COPY AIContentCreator/build-files/styles/     ./styles/
+COPY AIContentCreator/build-files/views/    ./views/
 
 # Verificar que los archivos se copiaron (debug) - ANTES de cambiar de usuario
 RUN ls -la /app/ && \
