@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario'])) {
 
 $usuario = $_SESSION['usuario'];
 
-require_once __DIR__ . './../db/db.php';
+require_once __DIR__ . '/../db/db.php';
 
 $pdo = Database::conectar();
 
@@ -59,7 +59,7 @@ $generoTema = null;
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-    // Normalizar estados a minúsculas
+    // Normalizar estados (aunque aquí solo se muestran)
     $row['noticia_revisada'] = $row['noticia_revisada'] !== null ? strtolower($row['noticia_revisada']) : null;
     $row['imagen_revisada']  = $row['imagen_revisada']  !== null ? strtolower($row['imagen_revisada'])  : null;
     $row['publicado']        = $row['publicado']        !== null ? strtolower($row['publicado'])        : null;
@@ -72,10 +72,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 // variables auxiliares para la vista
-$__idGenero    = $idGenero;
-$__generoTema  = $generoTema;
+$__idGenero   = $idGenero;
+$__generoTema = $generoTema;
 
 // -----------------------------
-// Cargar la vista
+// Cargar la vista (solo lectura)
 // -----------------------------
 require_once __DIR__ . '/../views/noticias_view.phtml';

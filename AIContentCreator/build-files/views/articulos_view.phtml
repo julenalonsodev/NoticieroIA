@@ -50,7 +50,7 @@ $idGeneroSafe = (int)($idGenero ?? 0);
             <th>Título</th>
             <th>Descripción</th>
             <th>Imagen</th>
-            <th>Estados</th>
+            <th>Estados / Guardar</th>
         </tr>
         </thead>
 
@@ -58,15 +58,11 @@ $idGeneroSafe = (int)($idGenero ?? 0);
         <?php foreach ($noticias as $row): ?>
 
             <?php
-            // --------------------------
-            // NORMALIZACIÓN DE DATOS
-            // --------------------------
             $rowId       = isset($row['id']) ? (int)$row['id'] : 0;
             $rowIdGenero = isset($row['id_genero'])
                 ? (int)$row['id_genero']
                 : $idGeneroSafe;
 
-            // Usamos fecha_publicacion de la BBDD
             $fechaPub = $row['fecha_publicacion'] ?? null;
 
             $notRev = $row['noticia_revisada'] ?? null;
@@ -112,7 +108,7 @@ $idGeneroSafe = (int)($idGenero ?? 0);
 
                 <!-- ESTADOS (FORM POR NOTICIA) -->
                 <td>
-                    <form method="POST" action="<?= BASE_URL ?>controllers/guardar_noticia.php">
+                    <form method="POST" action="<?= BASE_URL ?>controllers/guardar_noticia.php" class="news-form">
 
                         <!-- Hidden IDs necesarios para el actualizador -->
                         <input type="hidden" name="id" value="<?= (int)$rowId ?>">
@@ -149,7 +145,7 @@ $idGeneroSafe = (int)($idGenero ?? 0);
                         </div>
 
                         <div class="field-group" style="margin-top: 8px;">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn primary btn-sm">
                                 💾 Guardar cambios
                             </button>
                         </div>

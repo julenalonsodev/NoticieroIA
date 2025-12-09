@@ -62,5 +62,13 @@ $stmtNoticias = $pdo->prepare($sqlNoticias);
 $stmtNoticias->execute([':id_genero' => $idGenero]);
 $noticias = $stmtNoticias->fetchAll(PDO::FETCH_ASSOC);
 
-// 3) Cargar la vista
+// Normalizar estados a minúsculas para que encajen con los <option value="...">
+foreach ($noticias as &$row) {
+    $row['noticia_revisada'] = $row['noticia_revisada'] !== null ? strtolower($row['noticia_revisada']) : null;
+    $row['imagen_revisada']  = $row['imagen_revisada']  !== null ? strtolower($row['imagen_revisada'])  : null;
+    $row['publicado']        = $row['publicado']        !== null ? strtolower($row['publicado'])        : null;
+}
+unset($row);
+
+// 3) Cargar la vista con controles de edición
 require __DIR__ . '/../views/articulos_view.phtml';
